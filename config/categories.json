@@ -1,0 +1,293 @@
+{
+    "Services":[
+        {
+            "name": "Bank",
+            "value": "bank"
+        },
+        {
+            "name": "Car Repair",
+            "value": "car_repair"
+        },
+        {
+            "name": "Car Wash",
+            "value": "car_wash"
+        },
+        {
+            "name": "Dentist",
+            "value": "dentist"
+        },
+        {
+            "name": "Beauty Salon",
+            "value": "beauty_salon"
+        },
+        {
+            "name": "Doctor",
+            "value": "doctor"
+        },
+        {
+            "name": "Gas Station",
+            "value": "gas_station"
+        },
+        {
+            "name": "Gym",
+            "value": "gym"
+        },
+        {
+            "name": "Hair Care",
+            "value": "hair_care"
+        },
+        {
+            "name": "Laundry",
+            "value": "laundry"
+        },
+        {
+            "name": "Locksmith",
+            "value": "locksmith"
+        },
+        {
+            "name": "Lodging",
+            "value": "lodging"
+        },
+        {
+            "name": "Real Estate Agency",
+            "value": "real_estate_agency"
+        },
+        {
+            "name": "Spa",
+            "value": "spa"
+        },
+        {
+            "name": "Storage",
+            "value": "storage"
+        },
+        {
+            "name": "Vet",
+            "value": "veterinary_care"
+        }
+    ],
+    "Travel":[
+        {
+            "name": "Airport",
+            "value": "airport"
+        },
+        {
+            "name": "Bus Station",
+            "value": "bus_station"
+        },
+        {
+            "name": "Car Dealer",
+            "value": "car_dealer"
+        },
+        {
+            "name": "Car Rental",
+            "value": "car_rental"
+        },
+        {
+            "name": "Parking",
+            "value": "parking"
+        },
+        {
+            "name": "Train Station",
+            "value": "subway_station,train_station,transit_station"
+        }
+    ]
+    ,
+    "Entertainment":[
+        {
+            "name": "Amusement Park",
+            "value": "amusement_park"
+        },
+        {
+            "name": "Aquarium",
+            "value": "aquarium"
+        },
+        {
+            "name": "Art Gallery",
+            "value": "art_gallery"
+        },
+        {
+            "name": "Bowling Alley",
+            "value": "bowling_alley"
+        },
+        {
+            "name": "Movie Theater",
+            "value": "movie_theater"
+        },
+        {
+            "name": "Museum",
+            "value": "museum"
+        },
+        {
+            "name": "Night Club",
+            "value": "night_club"
+        },
+        {
+            "name": "Park",
+            "value": "park"
+        },
+        {
+            "name": "Stadium",
+            "value": "stadium"
+        },
+        {
+            "name": "Tourist Attraction",
+            "value": "tourist_attraction"
+        },
+        {
+            "name": "Zoo",
+            "value": "zoo"
+        }
+    ],
+    "Store":[
+        {
+            "name": "Bakery",
+            "value": "bakery"
+        },
+        {
+            "name": "Bar",
+            "value": "bar"
+        },
+        {
+            "name": "Cafe",
+            "value": "cafe"
+        },
+        {
+            "name": "Liquor Store",
+            "value": "liquor_store"
+        },
+        {
+            "name": "Meal Takeaway",
+            "value": "meal_takeaway"
+        }
+        ,
+        {
+            "name": "Restaurant",
+            "value": "restaurant"
+        },
+        {
+            "name": "Supermarket",
+            "value": "supermarket"
+        }
+    ],
+    "General_Shopping":[
+        {
+            "name": "Bicycle Store",
+            "value": "bicycle_store"
+        },
+        {
+            "name": "Bookstore",
+            "value": "book_store"
+        },
+        {
+            "name": "Clothing Store",
+            "value": "clothing_store"
+        },
+        {
+            "name": "Convenience Store",
+            "value": "convenience_store"
+        },
+        {
+            "name": "Department Store",
+            "value": "department_store"
+        }
+        ,
+        {
+            "name": "Drugstore",
+            "value": "drugstore"
+        },
+        {
+            "name": "Electronics Store",
+            "value": "electronics_store"
+        },
+        {
+            "name": "Florist",
+            "value": "florist"
+        },
+        {
+            "name": "Hardware Store",
+            "value": "hardware_store"
+        },
+        {
+            "name": "Home Goods Store",
+            "value": "home_goods_store"
+        },
+        {
+            "name": "Jewelry Store",
+            "value": "jewelry_store"
+        },
+        {
+            "name": "Pet Store",
+            "value": "pet_store"
+        },
+        {
+            "name": "Pharmacy",
+            "value": "pharmacy"
+        },
+        {
+            "name": "Shoe Store",
+            "value": "shoe_store"
+        },
+        {
+            "name": "Shopping mall",
+            "value": "shopping_mall"
+        },
+        {
+            "name": "Store",
+            "value": "store"
+        }
+    ],
+    "Other":[
+        {
+            "name": "Fire Station",
+            "value": "fire_station"
+        },
+        {
+            "name": "Hospital",
+            "value": "police"
+        },
+        {
+            "name": "Police",
+            "value": "hospital"
+        },
+        {
+            "name": "Post Office",
+            "value": "post_office"
+        },
+        {
+            "name": "Primary School",
+            "value": "primary_school"
+        },
+        {
+            "name": "School",
+            "value": "school"
+        },
+        {
+            "name": "Secondary School",
+            "value": "secondary_school"
+        },
+        {
+            "name": "University",
+            "value": "university"
+        },
+        {
+            "name": "Church",
+            "value": "church"
+        },
+        {
+            "name": "Funeral Home",
+            "value": "funeral_home"
+        },
+        {
+            "name": "Hindu Temple",
+            "value": "hindu_temple"
+        },
+        {
+            "name": "Mosque",
+            "value": "mosque"
+        },
+        {
+            "name": "Synagogue",
+            "value": "synagogue"
+        }
+    ]
+}

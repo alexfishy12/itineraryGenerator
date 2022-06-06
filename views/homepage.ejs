@@ -1,0 +1,317 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Itinerary Generator</title>
+  <link rel="stylesheet" href="/css/lib/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/lib/jQuery-3.4.1.js"></script>
+  <script src="/js/lib/bootstrap.min.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBj-qnkdxbjjZIlQ9mM4x4bR7L_bXXpDeU&callback=initAutocomplete&libraries=places&v=weekly" defer></script>
+  <script src="/js/map.js"></script>
+  <script src="/js/searchbar.js"></script>
+  <script src="/js/homepage.js"></script>
+
+</head>
+
+<div id="nav-placeholder"></div>
+<script>
+  $(function(){
+    $("#nav-placeholder").load("/nav");
+  });
+</script>
+
+<body class="bodyNav">
+<div class="container-map">
+  <div class="row justify-content-md-center h-100">
+    <div id ="HM" class="col col-lg-4 h-100">
+      <div id="HC" class="card ">
+        <div class="card-body">
+            <div class="row">
+              <input id="pac-input" class="form-control" type="text-search" placeholder="Search"/>
+            </div>
+            <hr></hr>
+            <div class="row overflow-hidden">
+              <div class="col-3">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#filterModal">Filters</button>
+                <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="filterModalTitle">Filters</h5>
+                        
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <!-- modal-body -->
+                        <div class="container">
+
+                          <div class="row">
+                            <div class="col col-lg-5">
+
+                            </div>
+                            <div class="col" >
+                              <input type="text" class="fillsearch" id="myInput" onkeyup="mySearch()" placeholder="Search" title="Type in a name"></input>
+
+                              <hr></hr>
+                              </div>
+
+                          </div>
+                          
+                          <div class="row" style="height: 300px;">
+                            <div class="col col-lg-5">
+                            <div id="filter-list" class="list-group">
+                              <nav class="nav nav-pills flex-column">
+                                  <a class="nav-link" href="#services" >Services</a>
+                                  <a class="nav-link" href="#travel" >Travel</a>
+                                  <a class="nav-link" href="#entertainment" >Entertainment</a>
+                                  <a class="nav-link" href="#store" >Store (Food)</a>
+                                  <a class="nav-link" href="#general" >General Shopping</a>
+                                  <a class="nav-link" href="#other" >Other</a>
+                              </nav>
+                            </div>
+                          </div>
+                          <div id="filterCOL" class="col">
+                            <div data-spy="scroll" data-target="#filter-list" data-offset="0">
+                              <!-- Services -->
+                              <h4 id="services">Services</h4>
+                              <hr>
+                              <ul id="filterList1" class="list-group">
+                                <% for(var i in services) {%>
+                                  <li>
+                                    <input type="checkbox" id="<%=services[i].value%>" name="<%=services[i].name%>" value="<%=services[i].value%>" onclick="inputType('<%=services[i].value%>', 'services')">
+                                    <label for=""><%=services[i].name%></label>
+                                  </li>
+                                <% } %>
+                              </ul>
+                              <!-- Travel -->
+                              <h4 id="travel">Travel</h4>
+                              <hr>
+                              <ul id="filterList2" class="list-group">
+                                <%for(var i in travel) {%>
+                                  <li>
+                                    <input type="checkbox" id="<%=travel[i].value%>" name="<%=travel[i].name%>" value="<%=travel[i].value%>" onclick="inputType('<%=travel[i].value%>', 'travel')">
+                                    <label for=""><%=travel[i].name%></label>
+                                  </li>
+                                <% } %>
+                              </ul>
+                              <!-- Entertainment -->
+                              <h4 id="entertainment">Entertainment</h4>
+                              <hr>
+                              <ul id="filterList3" class="list-group">
+                                <%for(var i in entertainment) {%>
+                                  <li>
+                                    <input type="checkbox" id="<%=entertainment[i].value%>" name="<%=entertainment[i].name%>" value="<%=entertainment[i].value%>" onclick="inputType('<%=entertainment[i].value%>', 'entertainment')">
+                                    <label for=""><%=entertainment[i].name%></label>
+                                  </li>
+                                <% } %>
+                              </ul>
+                              <!-- Store (Food) -->
+                              <h4 id="store">Store (Food)</h4>
+                              <hr>
+                              <ul id="filterList4" class="list-group">
+                                <%for(var i in store) {%>
+                                  <li>
+                                    <input type="checkbox" id="<%=store[i].value%>" name="<%=store[i].name%>" value="<%=store[i].value%>" onclick="inputType('<%=store[i].value%>', 'store')">
+                                    <label for=""><%=store[i].name%></label>
+                                  </li>
+                                <% } %>
+                              </ul>
+                              <!-- General Shopping -->
+                              <h4 id="general">General Shopping</h4>
+                              <hr>
+                              <ul id="filterList5" class="list-group">
+                                <%for(var i in general) {%>
+                                  <li>
+                                    <input type="checkbox" id="<%=general[i].value%>" name="<%=general[i].name%>" value="<%=general[i].value%>" onclick="inputType('<%=general[i].value%>', 'general')">
+                                    <label for=""><%=general[i].name%></label>
+                                  </li>
+                                <% } %>
+                              </ul>
+                              <!-- Other -->
+                              <h4 id="other">Other</h4>
+                              <hr>
+                              <ul id="filterList6" class="list-group">
+                                <%for(var i in other) {%>
+                                  <li>
+                                    <input type="checkbox" id="<%=other[i].value%>" name="<%=other[i].name%>" value="<%=other[i].value%>" onclick="inputType('<%=other[i].value%>', 'other')">
+                                    <label for=""><%=other[i].name%></label>
+                                  </li>
+                                <% } %>
+                              </ul>
+                            </div>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- modal-body-end -->
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" onclick="clearTypes()">Clear Filters</button>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="getLocations()">Add Filters</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-9 d-flex justify-content-end">
+                <input type="button" value='Set Trip Time' class="btn btn-secondary btn-sm" onclick="setTime(document.getElementById('setTime').value)"></input>
+                <input type="number" id="setTime" name="setTime" maxlength="3" size="3" min="1" max="300" placeholder="3 (hours)"/>               
+              </div>
+            </div>
+            <div class="row">
+              <div class="col"></div>
+              <div class="col-9 d-flex justify-content-end">
+                <div id="timeLeft" class="font-weight-bold"></div>
+              </div>
+            </div>
+            <hr></hr>
+            <div class="row flex-grow-1 overflow-auto" id="results_div">
+              <ul class="list-group" style="width: 100%;">
+                <li class="list-group-item list-group-item-info" style="width: 100%; height: 100%;">
+                  Instructions:<br><br>
+                  1. Search for the starting address of your trip.<br><br>
+                  2. Input the time constraint for your trip.<br><br>
+                  3. Apply filters for desired locations you would like to visit, and pick as many as you like.<br><br>
+                  4. Export results.<br><br><br><br>
+                </li>
+              </ul>
+            </div>
+            <div class="row absolute-bottom">
+              <div class="col">
+                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target=".bd-example-modal-sm">key</button>
+
+                  <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm">
+                      <div class="modal-content">
+
+                        <div class="container-map">
+                          <div class="row">
+                            <div class="col d-flex justify-content-center">
+                              <p>Icon Key</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <img src="http://maps.google.com/mapfiles/kml/pal4/icon47.png" alt="Trulli" width="48" height="48">
+                            </div>
+                            <div class="col d-flex align-items-center">
+                              <p>Search Location</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <!-- spacer --><br>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <img src="https://maps.google.com/mapfiles/kml/paddle/blu-stars.png" alt="Trulli" width="48" height="48">
+                            </div>
+                            <div class="col d-flex align-items-center">
+                              <p>Services</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <!-- spacer --><br>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <img src="https://maps.google.com/mapfiles/kml/paddle/pink-stars.png" alt="Trulli" width="48" height="48">
+                            </div>
+                            <div class="col d-flex align-items-center">
+                              <p>Travel</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <!-- spacer --><br>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <img src="https://maps.google.com/mapfiles/kml/paddle/orange-stars.png" alt="Trulli" width="48" height="48">
+                            </div>
+                            <div class="col d-flex align-items-center">
+                              <p>Entertainment</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <!-- spacer --><br>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <img src="https://maps.google.com/mapfiles/kml/paddle/grn-stars.png" alt="Trulli" width="48" height="48">
+                            </div>
+                            <div class="col d-flex align-items-center">
+                              <p>Store</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <!-- spacer --><br>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <img src="https://maps.google.com/mapfiles/kml/paddle/ltblu-stars.png" alt="Trulli" width="48" height="48">
+                            </div>
+                            <div class="col d-flex align-items-center">
+                              <p>General</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <!-- spacer --><br>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <img src="https://maps.google.com/mapfiles/kml/paddle/wht-stars.png" alt="Trulli" width="48" height="48">
+                            </div>
+                            <div class="col d-flex align-items-center">
+                              <p>Other</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <div class="col d-flex justify-content-end">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#itineraryModal">See Itinerary</button>
+              </div>
+                <button type="button"  class="btn btn-info btn-sm" onclick="download()" >
+                  <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-download" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path fill-rule="evenodd" d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+        </div>
+      </div>
+      <div id ="HM" class="col">
+        <div id="map"></div>
+      </div>
+      <div class="modal fade" id="itineraryModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Your Trip Itinerary</h5>
+                </div>
+                <div class="modal-body">
+                    <div><b>Trip Info:</b><br>
+                      Locations to visit: 3<br>
+                      Total estimated time: 4.3 hours
+                    </div>
+                    <hr>
+                    <div id="itineraryList">
+                      
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Download Itinerary</button>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
