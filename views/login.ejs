@@ -1,0 +1,46 @@
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itinerary Generator</title>
+    <link rel="stylesheet" href="/css/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/forgotPassword.js"></script>
+</head>
+
+<body>
+    <div id="login">
+        <div class="d-flex justify-content-center">
+            <h1 id="LoginTitle">Itinerary Generator</h1>
+        </div>
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6">
+                    <h3 id="Unauthorized" class="text-center .text-danger">Unauthorized access to this system is prohibited</h3>
+                    <div id="login-box" class="align-self-center">
+                        <form id="login-form" class="col-lg-6" action="/auth/login" method="post">
+                            <% if (message) { %>
+                                <div class="alert alert-danger" role="alert">
+                                    <%=message%>
+                                </div>
+                            <% } %>
+                            
+                            <div class="form-group">
+                                <label id="u" for="username" >Username:</label><br>
+                                <input type="text" name="username" id="username" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label id="p" for="password" >Password:</label><br>
+                                <input type="password" name="password" id="password" class="form-control" required>
+                            </div>
+                            <div class="form-group d-flex justify-content-around">
+                                <input type="submit" name="submit" class="btn btn-info btn-md" value="Login">
+                                <button type="button" onclick="forgotPassword() " class="btn btn-info btn-md">Forgot Password</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
