@@ -21,14 +21,35 @@
   });
 </script>
 
-<body class="bodyNav">
-<div class="container-map">
-  <div class="row justify-content-md-center h-100">
-    <div id ="HM" class="col col-lg-4 h-100">
+<body class="bodyNav bg-white">
+  <div class="page1 container-fluid" id="formPage">
+    <div class="row">
+      <div class="col-md-3"></div>
+      <form class="col-md-6 text-center">
+        <br><br><br><br><br><br>
+        <div class="h3 text-center" id="question">Where does your trip begin?</div>
+          <div id="text-search-div-page1">
+            <input id="pac-input" class="form-control" type="text-search" placeholder="Search"/>
+          </div>
+          <br>
+          <input type="checkbox" class="form-check-input" id="sameAsDest">
+          <label for="sameAsDest" class="form-check-label" id="checkboxLabel">Same location as destination?</label>
+          <br><br>
+          <div class="btn-group">
+            <button type="button" class="btn btn-danger btn-group" onclick="goBack()" id="backButton">Back</button>
+            <button type="button" class="btn btn-primary btn-group" onclick="continueButton()">Continue</button>
+          </div>
+      </form>
+      <div class="col-md-3"></div>
+    </div>
+  </div>
+  <div class="page2 container-fluid mx-3">
+  <div class="row justify-content-md-center ">
+    <div id ="HM" class="col col-lg-4">
       <div id="HC" class="card ">
         <div class="card-body">
-            <div class="row">
-              <input id="pac-input" class="form-control" type="text-search" placeholder="Search"/>
+            <div class="row" id="text-search-div-page2">
+              <!--<input id="pac-input" class="form-control" type="text-search" placeholder="Search"/>-->
             </div>
             <hr></hr>
             <div class="row overflow-hidden">
@@ -180,6 +201,9 @@
             </div>
             <div class="row absolute-bottom">
               <div class="col">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="setPage(1)">Back</button>
+              </div>
+              <div class="col">
                 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target=".bd-example-modal-sm">key</button>
 
                   <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
@@ -289,24 +313,23 @@
         <div id="map"></div>
       </div>
       <div class="modal fade" id="itineraryModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalLabel">Your Trip Itinerary</h5>
                 </div>
-                <div class="modal-body">
-                    <div><b>Trip Info:</b><br>
-                      Locations to visit: 3<br>
-                      Total estimated time: 4.3 hours
+                <div class="modal-body" id="itineraryBody" style="overflow-y:scroll">
+                    <div><b>Trip Info</b><br>
+                      <div id='numLocations'>You haven't added any locations yet!</div>
+                      <div id='estTime'></div>
                     </div>
-                    <hr>
-                    <div id="itineraryList">
+                    <div class="list-group" id="itineraryList">
                       
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Download Itinerary</button>
+                    <button type="button" class="btn btn-primary">Generate Code</button>
                 </div>
             </div>
         </div>
