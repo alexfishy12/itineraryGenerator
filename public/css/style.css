@@ -57,10 +57,13 @@
   }
 
   .bodyNav { 
-  padding-top: 55px;
+  padding-top: 0px;
   background-color: #bbaaaa; 
   }
 
+  .navbar {
+    margin-bottom: 0px;
+  }
   /* Homepage "Change color schema after decesion is made"
   ========================================= */
 
@@ -77,7 +80,7 @@
 html,
 body {
   height: 94%;
-  margin: 5px;
+  margin: 0px;
   padding: 0;
 }
 
@@ -153,7 +156,7 @@ body {
 }
 
 .container-map{
-  padding: 20px;
+  width: 98vw;
   }
 
 .containermap{
@@ -168,13 +171,13 @@ body {
   }
 
   #HC{
-    margin-left: 5px;
+    margin-left: 0px;
     height: 85vh;
   }
 
   input[type=text-search] {
-    border: 2px solid black;
-    border-radius: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
   }
 
   #miles

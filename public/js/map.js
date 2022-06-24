@@ -235,6 +235,7 @@ function getLocations(){
                                 `
                                 <h5>${locationRes[i].name}</h5>
                                 ${locationRes[i].vicinity}
+                                <br><button class="btn btn-primary btn-sm" onclick="addToItinerary('${locationRes[i].place_id}')">Add to Itinerary</button>
                                 `
                             );
                             infoWindow.open(map, marker);
@@ -254,7 +255,7 @@ function getLocations(){
                             Rating: ${locationRes[i].user_rating} stars
                         </div>
                         <div class="button">
-                            <button class="btn btn-primary btn-sm" onclick="addToItinerary(${locationRes[i]})">Add to Itinerary</button>
+                            <button class="btn btn-primary btn-sm" onclick="addToItinerary('${locationRes[i].place_id}')">Add to Itinerary</button>
                         </div>`
                 }
                 resultHTML += '</li></ul>';
@@ -355,4 +356,83 @@ function removeFromArray(type){
 
     return arr;
 
+}
+
+function updateDirections(itinerary)
+{
+    console.log("Updating directions...");
+    initMap();
+    function initMap() {
+        const directionsService = new google.maps.DirectionsService();
+        const directionsRenderer = new google.maps.DirectionsRenderer();
+        const map = new google.maps.Map(document.getElementById("map"));
+      
+        directionsRenderer.setMap(map);
+      
+       
+        calculateAndDisplayRoute(directionsService, directionsRenderer);
+          
+    }
+      
+      function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+        const waypts = google.maps.DirectionsWaypoint = [];
+        
+      
+        for (let i = 0; i < itinerary.length; i++) {
+            waypts.push({
+              location: itinerary[i].formatted_address,
+              stopover: true,
+            });
+          
+        }
+      
+        directionsService
+          .route({
+            origin: getOrigin(),
+            destination: getDest(),
+            waypoints: waypts,
+            optimizeWaypoints: true,
+            travelMode: google.maps.TravelMode.WALKING,
+          })
+          .then((response) => {
+            directionsRenderer.setDirections(response);
+            //console.log(google.maps.DirectionsLeg.duration(response));
+          })
+          .catch((e) => window.alert("Directions request failed due to"));
+      }
+}
+
+function testDistanceMatrix()
+{
+    var origin1 = new google.maps.LatLng(55.930385, -3.118425);
+    var origin2 = 'Greenwich, England';
+    var destinationA = 'Stockholm, Sweden';
+    var destinationB = new google.maps.LatLng(50.087692, 14.421150);
+
+    var service = new google.maps.DistanceMatrixService();
+    service.getDistanceMatrix(
+    {
+        origins: [origin1, origin2],
+        destinations: [destinationA, destinationB],
+        travelMode: 'WALKING'
+    }, callback);
+
+    function callback(response, status) {
+        if (status == 'OK') {
+            var origins = response.originAddresses;
+            var destinations = response.destinationAddresses;
+        
+            for (var i = 0; i < origins.length; i++) {
+                var results = response.rows[i].elements;
+                for (var j = 0; j < results.length; j++) {
+                    var element = results[j];
+                    var distance = element.distance.text;
+                    var duration = element.duration.text;
+                    var from = origins[i];
+                    var to = destinations[j];
+                    console.log(element);
+                }
+            }
+        }
+    }
 }

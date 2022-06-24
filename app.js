@@ -18,6 +18,7 @@ var adminList = require("./routes/api/listget");
 var auth = require("./routes/auth.js");
 var update = require("./routes/update");
 var location = require("./routes/api/address");
+var placeDetails = require("./routes/api/place_details");
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -50,6 +51,7 @@ app.use("/list", adminList);
 app.use("/auth", auth);
 app.use("/update", update);
 app.use("/location",location);
+app.use("/placeDetails", placeDetails)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

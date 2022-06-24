@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var got = require('got');
+var googleAPIKey = process.env.GOOGLE_API_KEY;
 const ensureAuthenticatedAPI = require('../../config/ensureAuthenticatedAPI');
 
 router.post("/", ensureAuthenticatedAPI,async(req,res)=>{
@@ -13,8 +14,7 @@ router.post("/", ensureAuthenticatedAPI,async(req,res)=>{
     try{
         var mapParr = [];
         for(var i in types){
-            //var url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},%20${lon}&radius=${getMeters(radius)}&type=${types[i].type}&key=AIzaSyBj-qnkdxbjjZIlQ9mM4x4bR7L_bXXpDeU`;
-            var url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},%20${lon}&radius=3218&type=${types[i].type}&key=AIzaSyBj-qnkdxbjjZIlQ9mM4x4bR7L_bXXpDeU`;
+            var url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},%20${lon}&radius=3218&type=${types[i].type}&key=` + googleAPIKey;
             const response = await got(url);
             var obj = JSON.parse(response.body);
             var next_page_token = obj.next_page_token;
@@ -31,7 +31,8 @@ router.post("/", ensureAuthenticatedAPI,async(req,res)=>{
                     "types": types[i],
                     "vicinity": obj.results[j].vicinity,
                     "user_rating": obj.results[j].rating,
-                    "category": types[i].category
+                    "category": types[i].category,
+                    "place_id": obj.results[j].place_id
                 };
                 mapParr.push(temp_json);
             }
