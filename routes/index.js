@@ -18,7 +18,6 @@ router.get('/login', (req,res)=>{
     res.render("login", {message: flash});
 });
 
-// check my work bahad
 router.get('/homepage', ensureAuthenticated, (req,res)=>{
     var categories = require("../config/categories.json");
     res.render("homepage", {

@@ -5,28 +5,8 @@
             "value": "bank"
         },
         {
-            "name": "Car Repair",
-            "value": "car_repair"
-        },
-        {
-            "name": "Car Wash",
-            "value": "car_wash"
-        },
-        {
-            "name": "Dentist",
-            "value": "dentist"
-        },
-        {
             "name": "Beauty Salon",
             "value": "beauty_salon"
-        },
-        {
-            "name": "Doctor",
-            "value": "doctor"
-        },
-        {
-            "name": "Gas Station",
-            "value": "gas_station"
         },
         {
             "name": "Gym",
@@ -35,14 +15,6 @@
         {
             "name": "Hair Care",
             "value": "hair_care"
-        },
-        {
-            "name": "Laundry",
-            "value": "laundry"
-        },
-        {
-            "name": "Locksmith",
-            "value": "locksmith"
         },
         {
             "name": "Lodging",
@@ -55,14 +27,6 @@
         {
             "name": "Spa",
             "value": "spa"
-        },
-        {
-            "name": "Storage",
-            "value": "storage"
-        },
-        {
-            "name": "Vet",
-            "value": "veterinary_care"
         }
     ],
     "Travel":[
@@ -163,10 +127,6 @@
         {
             "name": "Restaurant",
             "value": "restaurant"
-        },
-        {
-            "name": "Supermarket",
-            "value": "supermarket"
         }
     ],
     "General_Shopping":[
@@ -189,8 +149,7 @@
         {
             "name": "Department Store",
             "value": "department_store"
-        }
-        ,
+        },
         {
             "name": "Drugstore",
             "value": "drugstore"

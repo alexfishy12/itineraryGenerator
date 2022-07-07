@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const uuid = require("uuid");
 const app = express();
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -11,6 +12,7 @@ var session = require('express-session');
 const port = process.env.PORT || 3001;
 
 InitiateMongoServer.InitiateMongoServer();
+uuid.v4();
 
 //router path
 var indexRouter = require("./routes/index");
@@ -19,6 +21,8 @@ var auth = require("./routes/auth.js");
 var update = require("./routes/update");
 var location = require("./routes/api/address");
 var placeDetails = require("./routes/api/place_details");
+var placeByAddress = require("./routes/api/placeByAddress");
+var codeGeneration = require("./routes/uuid.js");
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -51,7 +55,9 @@ app.use("/list", adminList);
 app.use("/auth", auth);
 app.use("/update", update);
 app.use("/location",location);
-app.use("/placeDetails", placeDetails)
+app.use("/placeDetails", placeDetails);
+app.use("/placeByAddress", placeByAddress);
+app.use("/codeGeneration", codeGeneration);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

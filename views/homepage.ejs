@@ -27,7 +27,21 @@
       <div class="col-md-3"></div>
       <form class="col-md-6 text-center">
         <br><br><br><br><br><br>
-        <div class="h3 text-center" id="question">Where does your trip begin?</div>
+
+        <div class="h3 text-center">First, input desired trip length.</div>
+          <div class="input-group text-center">
+            <input type="number" class="form-control" id="setTime" maxlength="3" size="3" min="1" max="300" placeholder="3" aria-describedby="basic-addon2"/>               
+            <span class="input-group-text" id="basic-addon2">hours</span> 
+          </div>
+          <hr class="hr-text" data-content="NOW,">
+          <div class="h3 text-center">Input Shared Itinerary Code</div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Itinerary Code: </span>
+            <input type="text" id="inputtedCode" class="form-control" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" aria-label="2eb6b710-fcd6-11ec-aa00-0f5625ac58ba" aria-describedby="basic-addon1">
+            <button type="button" class="form-control btn btn-primary col-md-3" id="inputCodeButton" onclick="generateItineraryFromCode()">Submit</button>
+          </div>
+          <hr class="hr-text" data-content="OR">
+          <div class="h3 text-center" id="question">Where does your trip begin?</div>
           <div id="text-search-div-page1">
             <input id="pac-input" class="form-control" type="text-search" placeholder="Search"/>
           </div>
@@ -40,6 +54,7 @@
             <button type="button" class="btn btn-primary btn-group" onclick="continueButton()">Continue</button>
           </div>
       </form>
+        </div>
       <div class="col-md-3"></div>
     </div>
   </div>
@@ -176,10 +191,6 @@
                   </div>
                 </div>
               </div>
-              <div class="col-9 d-flex justify-content-end">
-                <input type="button" value='Set Trip Time' class="btn btn-secondary btn-sm" onclick="setTime(document.getElementById('setTime').value)"></input>
-                <input type="number" id="setTime" name="setTime" maxlength="3" size="3" min="1" max="300" placeholder="3 (hours)"/>               
-              </div>
             </div>
             <div class="row">
               <div class="col"></div>
@@ -201,11 +212,7 @@
             </div>
             <div class="row absolute-bottom">
               <div class="col">
-                <button type="button" class="btn btn-secondary btn-sm" onclick="setPage(1)">Back</button>
-              </div>
-              <div class="col">
                 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target=".bd-example-modal-sm">key</button>
-
                   <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-sm">
                       <div class="modal-content">
@@ -299,12 +306,6 @@
               <div class="col d-flex justify-content-end">
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#itineraryModal">See Itinerary</button>
               </div>
-                <button type="button"  class="btn btn-info btn-sm" onclick="download()" >
-                  <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-download" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                    <path fill-rule="evenodd" d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                  </svg>
-                </button>
               </div>
             </div>
         </div>
@@ -317,19 +318,21 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalLabel">Your Trip Itinerary</h5>
+                    <div><b>Trip Info</b><br>
+                      <div class="" id='numLocations'>You haven't added any locations yet!</div>
+                      <span id='estTotalTime'></span><span> | </span><span id="timeWarning" class="badge bg-danger"></span>
+                      <div id='estTravelTime'></div><span id="estDistance"></span>
+                    </div>
                 </div>
                 <div class="modal-body" id="itineraryBody" style="overflow-y:scroll">
-                    <div><b>Trip Info</b><br>
-                      <div id='numLocations'>You haven't added any locations yet!</div>
-                      <div id='estTime'></div>
-                    </div>
                     <div class="list-group" id="itineraryList">
                       
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <div id="generatedCode"></div>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Generate Code</button>
+                    <button type="button" class="btn btn-primary" onclick="generateUniqueCode()" id="generateCodeButton">Generate Code</button>
                 </div>
             </div>
         </div>
