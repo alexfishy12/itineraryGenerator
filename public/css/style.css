@@ -157,11 +157,11 @@ body {
 
 .container-map{
   width: 98vw;
-  }
+}
 
 .containermap{
   margin-top: 70px;
-  }
+}
 
   #HM{
     padding: 0;
@@ -290,3 +290,34 @@ body {
   .error-template {padding: 40px 15px;text-align: center;}
   .error-actions {margin-top:15px;margin-bottom:15px;}
   .error-actions .btn { margin-right:10px; }
+
+  .hr-text {
+    line-height: 1em;
+    position: relative;
+    outline: 0;
+    border: 0;
+    color: black;
+    text-align: center;
+    height: 1.5em;
+    opacity: .5;
+  }
+  .hr-text:before {
+    content: '';
+    background: linear-gradient(to right, transparent, #818078, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+  }
+  .hr-text:after {
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    color: #818078;
+    background-color: #fcfcfa;
+  }

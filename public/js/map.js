@@ -88,37 +88,37 @@ function initAutocomplete() {
         // For each place, get the icon, name and location.
         const bounds = new google.maps.LatLngBounds();
         places.forEach((place) => {
-        if (!place.geometry) {
-            console.log("Returned place contains no geometry");
-            return;
-        }
-        const icon = {
-            url: place.icon,
-            size: new google.maps.Size(71, 71),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(17, 34),
-            scaledSize: new google.maps.Size(25, 25),
-        };
-        // Create a marker for each place.
-        markers.push(
-            new google.maps.Marker({
-            map,
-            icon: {url: "http://maps.google.com/mapfiles/kml/pal4/icon47.png"},
-            title: place.name,
-            position: place.geometry.location,
-            })
-        );
+            if (!place.geometry) {
+                console.log("Returned place contains no geometry");
+                return;
+            }
+            const icon = {
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25),
+            };
+            // Create a marker for each place.
+            markers.push(
+                new google.maps.Marker({
+                map,
+                icon: {url: "http://maps.google.com/mapfiles/kml/pal4/icon47.png"},
+                title: place.name,
+                position: place.geometry.location,
+                })
+            );
 
-        inputLocation.lat = place.geometry.location.lat();
-        inputLocation.lon = place.geometry.location.lng();
-        googleLocation = place.geometry.location;
+            inputLocation.lat = place.geometry.location.lat();
+            inputLocation.lon = place.geometry.location.lng();
+            googleLocation = place.geometry.location;
 
-        if (place.geometry.viewport) {
-            // Only geocodes have viewport.
-            bounds.union(place.geometry.viewport);
-        } else {
-            bounds.extend(place.geometry.location);
-        }
+            if (place.geometry.viewport) {
+                // Only geocodes have viewport.
+                bounds.union(place.geometry.viewport);
+            } else {
+                bounds.extend(place.geometry.location);
+            }
         });
         map.fitBounds(bounds);
     });
@@ -365,10 +365,49 @@ function updateDirections(itinerary)
     function initMap() {
         const directionsService = new google.maps.DirectionsService();
         const directionsRenderer = new google.maps.DirectionsRenderer();
-        const map = new google.maps.Map(document.getElementById("map"));
+        //removes default map icons
+        var myStyles =[
+            {
+                featureType: "poi",
+                elementType: "labels",
+                stylers: [
+                      { visibility: "off" }
+                ]
+            }
+        ];
+        const mapOptions = {
+            styles: myStyles
+        }
+        const map = new google.maps.Map(document.getElementById("map"), mapOptions);
       
         directionsRenderer.setMap(map);
       
+        // for(var location in itinerary){
+        //     console.log("hello")
+        //     console.log(location);
+        //     var marker = new google.maps.Marker({
+        //         position: new google.maps.LatLng(location.geometry["location"].lat, location.geometry["location"].lng),
+        //         map,
+        //         title: location.name,
+        //         icon: {url: getIcon(itinerary[location].category).url}
+        //     });
+
+        //     var infoWindow = new google.maps.InfoWindow();
+        //     google.maps.event.addListener(marker, 'click', ((marker, location) =>
+        //     {
+        //         return function()
+        //         {
+        //             infoWindow.setContent(
+        //                 `
+        //                 <h5>${location.name}</h5>
+        //                 ${location.vicinity}
+        //                 <br><button class="btn btn-danger btn-sm" onclick="removeFromItinerary('${location.place_id}')">Remove from Itinerary</button>
+        //                 `
+        //             );
+        //             infoWindow.open(map, marker);
+        //         };
+        //     })(marker, i));
+        // }
        
         calculateAndDisplayRoute(directionsService, directionsRenderer);
           
@@ -378,7 +417,7 @@ function updateDirections(itinerary)
         const waypts = google.maps.DirectionsWaypoint = [];
         
       
-        for (let i = 0; i < itinerary.length; i++) {
+        for (let i = 1; i < itinerary.length-1; i++) {
             waypts.push({
               location: itinerary[i].formatted_address,
               stopover: true,
@@ -391,14 +430,14 @@ function updateDirections(itinerary)
             origin: getOrigin(),
             destination: getDest(),
             waypoints: waypts,
-            optimizeWaypoints: true,
+            optimizeWaypoints: false,
             travelMode: google.maps.TravelMode.WALKING,
           })
           .then((response) => {
             directionsRenderer.setDirections(response);
             //console.log(google.maps.DirectionsLeg.duration(response));
           })
-          .catch((e) => window.alert("Directions request failed due to"));
+          .catch((e) => window.alert("Directions request failed due to " + e));
       }
 }
 
@@ -436,3 +475,65 @@ function testDistanceMatrix()
         }
     }
 }
+
+function calculateTripSteps(itinerary)
+{
+    var trip_steps = new Array();
+    var origins = new Array();
+    var destinations = new Array();
+
+    itinerary.forEach((location) =>
+    {
+        origins.push(location.formatted_address);
+        destinations.push(location.formatted_address);
+    })
+
+    var service = new google.maps.DistanceMatrixService();
+    
+    service.getDistanceMatrix(
+    {
+        origins: origins,
+        destinations: destinations,
+        travelMode: 'WALKING'
+    }, callback);
+
+    function callback(response, status) {
+        if (status == 'OK') {
+            var origins = response.originAddresses;
+            var destinations = response.destinationAddresses;
+        
+            for (var i = 0; i < origins.length; i++) {
+                var results = response.rows[i].elements;
+                for (var j = 0; j < results.length; j++) {
+                    var element = results[j];
+                    var distance = element.distance.text;
+                    var duration = element.duration.text;
+                    var from = origins[i];
+                    var to = destinations[j];
+                    console.log(element);
+                }
+            }
+            console.log(response);
+
+            //turn response matrix into usable trip steps
+            for(var i=0; i < itinerary.length-1; i++)
+            {
+                var trip_step = {
+                    origin: itinerary[i].formatted_address, 
+                    destination: itinerary[i+1].formatted_address,
+                    distance: response.rows[i].elements[i+1].distance,
+                    duration: response.rows[i].elements[i+1].duration
+                }
+
+                trip_steps.push(trip_step);
+                setTravelTimeandDistance(trip_steps);
+                calculateTripTime();
+            }
+        }
+    }
+
+}
+
+//function that switches map to directions
+
+//function that switches map to markers view
