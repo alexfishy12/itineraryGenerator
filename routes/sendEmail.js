@@ -9,13 +9,14 @@ const ensureAuthenticatedAPI = require('../config/ensureAuthenticatedAPI');
 router.post("/", ensureAuthenticatedAPI,async(req,res)=>{
 
     //get post variables
-    //var message = req.body.message;
+    var bodyHTML = req.body.message;
+    var recipient = req.body.recipient;
 
     sendmail({
-        from: 'no-reply@kean.edu',
-        to: 'fisheral@kean.edu',
-        subject: 'test sendmail',
-        html: 'Body of email',
+        from: 'no-reply.itinerary-generator@kean.edu',
+        to: recipient,
+        subject: 'Itinerary Generator: Your Unique Code',
+        html: bodyHTML,
     }, function(err, reply) {
         console.log(err && err.stack);
         console.dir(reply)

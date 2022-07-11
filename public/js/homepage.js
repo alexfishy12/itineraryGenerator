@@ -724,30 +724,64 @@ function changeDestination()
 
 function sendEmail(unique_code)
 {
-    var message = unique_code
-    $.ajax({
-        url: "/sendEmail",
-        method: "POST",
-        dataType: "json",
-        data: {
-            message: message
-        },
-        success: (res) => {
-            console.log("AJAX Success.");
-            console.log(res);
-            if (res.error)
+    console.log("sendEmail function executing...");
+    var message = `
+        Greetings! <br><br>
+        Congratulations on creating an itinerary! Enter the unique code below on the itinerary generator 
+        website to regenerate the itinerary you just saved!
+        <br><br>
+        Your itinerary's unique code: <strong> ` + unique_code + ` </strong>
+        <br><br>
+        Best,
+        <br>
+        Itinerary Generator team
+    `;
+    
+    var recipientIsCorrect;
+    const askForEmail = function() {
+        var recipient = prompt('Enter recipient email who will receive itinerary code:');
+        if (recipient !== null)
+        {
+            recipientIsCorrect = confirm("Is " + recipient + " the correct email?");
+            
+            if(recipientIsCorrect)
             {
-                alert(res.error);
+                $.ajax({
+                    url: "/sendEmail",
+                    method: "POST",
+                    dataType: "json",
+                    data: {
+                        message: message,
+                        recipient: recipient
+                    },
+                    success: (res) => {
+                        console.log("AJAX Success.");
+                        alert("Email sent to: " + recipient);
+                        if (res.error)
+                        {
+                            alert(res.error);
+                        }
+                        else
+                        {
+                            console.log(res);
+                        }
+                    },
+                    error: (error) => {
+                        console.log("AJAX error.");
+                        alert("AJAX error.");
+                        console.log(error);
+                    }
+                })
             }
             else
             {
-                console.log(res);
+                askForEmail();
             }
-        },
-        error: (error) => {
-            console.log("AJAX error.");
-            alert("AJAX error.");
-            console.log(error);
         }
-    })
+        else
+        {
+            alert("Email will not be sent. Please save code in a safe place to regenerate this itinerary.");
+        }
+    }
+    askForEmail();
 }
