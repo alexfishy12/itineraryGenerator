@@ -6,7 +6,7 @@ var got = require('got');
 var googleAPIKey = process.env.GOOGLE_API_KEY;
 const ensureAuthenticatedAPI = require('../config/ensureAuthenticatedAPI');
 
-router.post("/", ensureAuthenticatedAPI,async(req,res)=>{
+router.post("/",async(req,res)=>{
 
     //get post variables
     var bodyHTML = req.body.message;
@@ -21,6 +21,8 @@ router.post("/", ensureAuthenticatedAPI,async(req,res)=>{
         console.log(err && err.stack);
         console.dir(reply)
     })
+
+    
 });
 
 

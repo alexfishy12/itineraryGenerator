@@ -5,12 +5,12 @@ const ensureAuthenticated = require('../config/ensureAuthenticated');
 const users = require("../model/users");
 
 router.get('/', (req, res) =>{
-    res.redirect("login");
+    res.redirect("homepage");
 });
 
 router.get("/nav", (req,res)=>{
     page = req.headers.referer.split("/")[3];
-    res.render("navbar", {user: req.user, page});
+    res.render("navbar", {page});
 });
 
 router.get('/login', (req,res)=>{
@@ -18,7 +18,7 @@ router.get('/login', (req,res)=>{
     res.render("login", {message: flash});
 });
 
-router.get('/homepage', ensureAuthenticated, (req,res)=>{
+router.get('/homepage', (req,res)=>{
     var categories = require("../config/categories.json");
     res.render("homepage", {
         services: categories.Services,
@@ -30,13 +30,13 @@ router.get('/homepage', ensureAuthenticated, (req,res)=>{
     });
 });
 
-router.get('/profile', ensureAuthenticated, (req,res)=>{
+router.get('/profile', (req,res)=>{
     res.render("profile", {
         user: req.user
     });
 });
 
-router.get('/contact', ensureAuthenticated, async (req,res)=>{
+router.get('/contact', async (req,res)=>{
 
     var user = await users.find({}).select({"name": 1, "rank": 1, "phone": 1, "email": 1, "_id": 0}).lean();
     res.render("contact", {
@@ -44,7 +44,7 @@ router.get('/contact', ensureAuthenticated, async (req,res)=>{
     });
 });
 
-router.get('/admin', ensureAdminAuthenticated, async (req,res)=>{
+router.get('/admin', async (req,res)=>{
     var allUsers = await users.find({}).lean();
     res.render("admin", {
         users: allUsers
