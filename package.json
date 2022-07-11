@@ -38,6 +38,7 @@
     "nodemailer": "^6.4.14",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
+    "sendmail": "^1.6.1",
     "sinon": "^9.2.0",
     "uuid": "^8.3.2"
   },

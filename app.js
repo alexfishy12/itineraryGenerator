@@ -14,6 +14,8 @@ const port = process.env.PORT || 3000;
 InitiateMongoServer.InitiateMongoServer();
 uuid.v4();
 
+InitiateMongoServer.transporter;
+
 //router path
 var indexRouter = require("./routes/index");
 var adminList = require("./routes/api/listget");
@@ -23,6 +25,7 @@ var location = require("./routes/api/address");
 var placeDetails = require("./routes/api/place_details");
 var placeByAddress = require("./routes/api/placeByAddress");
 var codeGeneration = require("./routes/uuid.js");
+var sendEmail = require("./routes/sendEmail");
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -58,6 +61,7 @@ app.use("/location",location);
 app.use("/placeDetails", placeDetails);
 app.use("/placeByAddress", placeByAddress);
 app.use("/codeGeneration", codeGeneration);
+app.use("/sendEmail", sendEmail);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
