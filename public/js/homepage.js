@@ -757,18 +757,9 @@ function sendEmail(unique_code)
                     success: (res) => {
                         console.log("AJAX Success.");
                         alert("Email sent to: " + recipient);
-                        if (res.error)
-                        {
-                            alert(res.error);
-                        }
-                        else
-                        {
-                            console.log(res);
-                        }
                     },
                     error: (error) => {
                         console.log("AJAX error.");
-                        alert("AJAX error.");
                         console.log(error);
                     }
                 })
