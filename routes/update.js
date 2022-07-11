@@ -10,7 +10,7 @@ const ensureAdminAuthenticated = require('../config/ensureAdminAuthenticated');
 
 //userinfo update
 // does session has unique id? 
-router.patch('/user/:id', ensuredAuthenticated,async(req, res)=>{
+router.patch('/user/:id', async(req, res)=>{
     const {name, username, phone, email, role} = req.body;
 
     var user = await User.findById(req.params.id);
@@ -31,7 +31,7 @@ router.patch('/user/:id', ensuredAuthenticated,async(req, res)=>{
 });
 
 //password update
-router.patch('/password/:id', ensuredAuthenticated, async (req, res)=>{
+router.patch('/password/:id', async (req, res)=>{
     var id = req.params.id;
 
     if(req.user.id != id){
@@ -89,7 +89,7 @@ router.patch('/password/:id', ensuredAuthenticated, async (req, res)=>{
     });
 });
 
-router.patch("/admin/password/:id", ensureAdminAuthenticated, async(req, res)=>{
+router.patch("/admin/password/:id", async(req, res)=>{
 
     req.check('password')
         .isLength({min: 6})
@@ -126,7 +126,7 @@ router.patch("/admin/password/:id", ensureAdminAuthenticated, async(req, res)=>{
 
 });
 
-router.delete('/:id', ensureAdminAuthenticated, (req, res)=>{
+router.delete('/:id', (req, res)=>{
     User.findByIdAndDelete(req.params.id, (err) =>{
         if(err){
             console.log(err);

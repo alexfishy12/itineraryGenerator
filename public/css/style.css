@@ -182,7 +182,7 @@ body {
 
   #miles
   {
-    margin-left: 5px;
+    margin-left: 0px;
     border-radius: 10px;
   }
 
@@ -246,7 +246,7 @@ body {
   ========================================= */
   #tableDiv
   {
-    margin: 5px;
+    margin: 0px;
     margin-bottom: -10px;
   }
 

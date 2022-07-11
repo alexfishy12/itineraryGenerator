@@ -1,31 +1,5 @@
 <nav class="navbar navbar-light bg-info">
-    <div class="navbar-left">
-        <a> Active User: <%= user.name%></a>
-    </div>
     
     <p class="navbar-title" onclick="window.location.replace('/homepage')" style="cursor: pointer;">Itinerary Generator</p>
     
-    <div class="navbar-right ">
-        <div class="btn-group ">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-              Settings
-            </button>
-            <div class="dropdown-menu dropdown-menu-right p-3 mb-2 bg-light text-white">
-                <% if (page != 'homepage') { %>
-                    <a class="dropdown-item" href="/homepage">Homepage</a>
-                <% } %>
-                <% if (page != 'profile') { %>
-                    <a class="dropdown-item" href="/profile">Profile</a>
-                <% } %>
-                <% if (page != 'contact') { %>
-                    <a class="dropdown-item" href="/contact">Contact</a>
-                <% } %>
-                <% if (user.rank == 'Admin' && page != "admin") { %>
-                    <a class="dropdown-item" href="/admin">Admin</a>
-                <% } %>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item text-danger" href="/auth/logout">Logout</a>           
-             </div>
-        </div>
-    </div>
 </nav>

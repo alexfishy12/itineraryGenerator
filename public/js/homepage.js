@@ -682,7 +682,6 @@ async function loadSavedItinerary(savedItinerary, unique_code)
     
     function allDone()
     {
-        alert('All done!');
         setPage(2);
         moveTextSearch(2);
         updateItinerary();
