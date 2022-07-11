@@ -9,7 +9,7 @@ const expressValidator  = require('express-validator'); //npm install express-va
 const passport = require("passport");
 var session = require('express-session');
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 InitiateMongoServer.InitiateMongoServer();
 uuid.v4();
