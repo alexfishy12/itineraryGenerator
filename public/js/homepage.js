@@ -589,6 +589,7 @@ function saveItineraryToDatabase(itinerary, unique_code)
         success: (res) => {
             console.log("Successfully saved to database.");
             $("#generateCodeButton").attr("disabled", "disabled");
+            sendEmail(unique_code);
             // $("#generateCodeButton").hide();
             console.log(res);
         },
@@ -719,4 +720,34 @@ function changeOrigin()
 function changeDestination()
 {
 
+}
+
+function sendEmail(unique_code)
+{
+    var message = unique_code
+    $.ajax({
+        url: "/sendEmail",
+        method: "POST",
+        dataType: "json",
+        data: {
+            message: message
+        },
+        success: (res) => {
+            console.log("AJAX Success.");
+            console.log(res);
+            if (res.error)
+            {
+                alert(res.error);
+            }
+            else
+            {
+                console.log(res);
+            }
+        },
+        error: (error) => {
+            console.log("AJAX error.");
+            alert("AJAX error.");
+            console.log(error);
+        }
+    })
 }
