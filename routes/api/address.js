@@ -2,19 +2,21 @@ var express = require('express');
 var router = express.Router();
 var got = require('got');
 var googleAPIKey = process.env.GOOGLE_API_KEY;
-const ensureAuthenticatedAPI = require('../../config/ensureAuthenticatedAPI');
 
 router.post("/", async(req,res)=>{
-
-    var lat = req.body.lat;
-    var lon = req.body.lon;
+    
+    console.log("\nRequest data: ")
+    console.log(req.body);
+    var location = JSON.parse(req.body.location)
+    var lat = location.lat;
+    var lng = location.lng;
     // var radius = req.body.radius; 
     var types = JSON.parse(req.body.types);
 
     try{
         var mapParr = [];
         for(var i in types){
-            var url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},%20${lon}&radius=3218&type=${types[i].type}&key=` + googleAPIKey;
+            var url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},%20${lng}&radius=3218&type=${types[i].type}&key=` + googleAPIKey;
             const response = await got(url);
             var obj = JSON.parse(response.body);
             var next_page_token = obj.next_page_token;

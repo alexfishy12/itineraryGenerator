@@ -5,14 +5,17 @@
 // This example requires the Places library. Include the libraries=places
 // parameter when you first load the API. For example:
 // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-let inputLocation = {"lat":"", "lon":""};
-let inputRadius = "";
+
 let types = [];
 let map;
 let businessMarkers = [];
 let googleLocation;
 
-function initAutocomplete() {
+$(document).ready(function () {
+  initMap();
+})
+
+function initMap() {
     
     // Removes all default markers
     var myStyles =[
@@ -31,97 +34,14 @@ function initAutocomplete() {
         mapTypeId: "roadmap",
         streetViewControl: false,  
         mapTypeControl: false,
-        styles: myStyles
+        styles: myStyles,
+        center: itinerary.getOrigin().geometry.location
     });
 
     var infoWindow = new google.maps.InfoWindow({map: map});
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-            map.setCenter(pos);
-        }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-        });
-    } else {
-        // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
-    }
-    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-                                'Error: The Geolocation service failed.' :
-                                'Error: Your browser doesn\'t support geolocation.');
-    }
-
-    // Create the search box and link it to the UI element.
-    const input = document.getElementById("pac-input");
-    const searchBox = new google.maps.places.SearchBox(input);
-    // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input); binds search to inside of map
-    // Bias the SearchBox results towards current map's viewport.
-    map.addListener("bounds_changed", () => {
-        searchBox.setBounds(map.getBounds());
-    });
-    let markers = [];
-    // Listen for the event fired when the user selects a prediction and retrieve
-    // more details for that place.
-    searchBox.addListener("places_changed", () => {
-        const places = searchBox.getPlaces();
-       
-        if (places.length == 0) {
-            return;
-        }
-        // Clear out the old markers.
-        markers.forEach((marker) => {
-            marker.setMap(null);
-        });
-
-        clearBusinessMarkers();
-        document.getElementById('results_div').innerHTML=`
-        <ul class="list-group" style="width: 100%;">
-            <li class="list-group-item list-group-item-dark" style="width: 100%;">Results</li>
-        </ul>`;
-        markers = [];
-        // For each place, get the icon, name and location.
-        const bounds = new google.maps.LatLngBounds();
-        places.forEach((place) => {
-            if (!place.geometry) {
-                console.log("Returned place contains no geometry");
-                return;
-            }
-            const icon = {
-                url: place.icon,
-                size: new google.maps.Size(71, 71),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(17, 34),
-                scaledSize: new google.maps.Size(25, 25),
-            };
-            // Create a marker for each place.
-            markers.push(
-                new google.maps.Marker({
-                map,
-                icon: {url: "http://maps.google.com/mapfiles/kml/pal4/icon47.png"},
-                title: place.name,
-                position: place.geometry.location,
-                })
-            );
-
-            inputLocation.lat = place.geometry.location.lat();
-            inputLocation.lon = place.geometry.location.lng();
-            googleLocation = place.geometry.location;
-
-            if (place.geometry.viewport) {
-                // Only geocodes have viewport.
-                bounds.union(place.geometry.viewport);
-            } else {
-                bounds.extend(place.geometry.location);
-            }
-        });
-        map.fitBounds(bounds);
-    });
+    
+    mapControls.addOriginMarker();
+    mapControls.addDestinationMarker();
 }
 
 function inputType(type, category){
@@ -189,24 +109,30 @@ function getLocationsv2(category, type) {
     console.log("Get locations v2: types =\n" );
     console.log(JSON.stringify([{type: type, category: category}]));
 
-    var lat = inputLocation.lat;
-    var lon = inputLocation.lon;
+    var location;
+    if (itinerary.locations.length < 1)
+    {
+        location = itinerary.getOrigin().geometry.location;
+    }
+    else
+    {
+        location = itinerary.getLocation(itinerary.locations.length).geometry.location;
+    }
     //var radius = inputRadius;
 
-    if(lat == "" || lon == ""){
-        window.alert("Search for a location before showing filtered results.");
+    if(type == []){
+        window.alert("Please choose a filter before continuing.");
+    }
     // }else if(radius == ""){
     //     window.alert("Please enter a radius before showing filtered results.");
-    }else if(type == []){
-        window.alert("Please choose a filter before continuing.");
-    }else{
+    else{
         console.log(type);
+        console.log(location);
         $.ajax({
             url: "/location",
             method: "POST",
             data: {
-                lat: inputLocation.lat,
-                lon: inputLocation.lon,
+                location: JSON.stringify(location),
                 //radius: inputRadius,
                 types: JSON.stringify([{type: type, category: category}])
             },
@@ -294,6 +220,46 @@ function getIcon(c){
         return {url: "https://maps.google.com/mapfiles/kml/paddle/wht-stars.png", listType: "light"};
     }
 
+}
+
+
+//download csv file
+var csvarr = new Array();
+
+function download(){
+    
+    //get elements 
+    var name = document.getElementsByClassName("name");
+    var address = document.getElementsByClassName("address");
+
+    if(name.length <= 0){
+        window.alert("There is no result");
+    }else{
+        for(i=0; i<name.length; i++)
+        {
+            var nameval = (name[i].innerHTML).replace(/\s/g, "");
+            var addval = (address[i].innerHTML).replace(/\s/g, "");
+
+            nameval = nameval.replaceAll(",", "   ");
+            addval = addval.replaceAll(",", "    ");
+
+            csvarr.push(new Array(nameval,addval));
+        }
+
+        //format in csv file
+        var csv = 'Name,Addresscity\n';
+        csvarr.forEach(function(row) {
+                csv += row.join(',');
+                csv += "\n";
+        });
+    
+        console.log(csv);
+        var hiddenElement = document.createElement('a');
+        hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+        hiddenElement.target = '_blank';
+        hiddenElement.download = 'REALestate_Result.csv';
+        hiddenElement.click();
+    }
 }
 
 function existInArray(type){
@@ -403,13 +369,93 @@ function updateDirections()
       }
 }
 
+function testDistanceMatrix()
+{
+    var origin1 = new google.maps.LatLng(55.930385, -3.118425);
+    var origin2 = 'Greenwich, England';
+    var destinationA = 'Stockholm, Sweden';
+    var destinationB = new google.maps.LatLng(50.087692, 14.421150);
+
+    var service = new google.maps.DistanceMatrixService();
+    service.getDistanceMatrix(
+    {
+        origins: [origin1, origin2],
+        destinations: [destinationA, destinationB],
+        travelMode: 'WALKING'
+    }, callback);
+
+    function callback(response, status) {
+        if (status == 'OK') {
+            var origins = response.originAddresses;
+            var destinations = response.destinationAddresses;
+        
+            for (var i = 0; i < origins.length; i++) {
+                var results = response.rows[i].elements;
+                for (var j = 0; j < results.length; j++) {
+                    var element = results[j];
+                    var distance = element.distance.text;
+                    var duration = element.duration.text;
+                    var from = origins[i];
+                    var to = destinations[j];
+                    console.log(element);
+                }
+            }
+        }
+    }
+}
 
 //function that switches map to directions
 
 //function that switches map to markers view
 
-
+function placeItineraryLocationMarkers()
+{
+    for(var i in locationRes){
     
+        var position = new google.maps.LatLng(locationRes[i].lat, locationRes[i].lng);
+        var marker = new google.maps.Marker({
+            position,
+            map,
+            title: locationRes[i].name,
+            icon: {url: getIcon(locationRes[i].category).url}
+        });
+    
+        var infoWindow = new google.maps.InfoWindow();
+        google.maps.event.addListener(marker, 'click', ((marker, i) =>
+        {
+            return function()
+            {
+                infoWindow.setContent(
+                    `
+                    <h5>${locationRes[i].name}</h5>
+                    ${locationRes[i].vicinity}
+                    <br><button class="btn btn-primary btn-sm" onclick="itinerary.addLocation('${locationRes[i].place_id}')">Add to Itinerary</button>
+                    `
+                );
+                infoWindow.open(map, marker);
+            };
+        })(marker, i));
+    
+        businessMarkers.push(marker);
+        resultHTML += `
+        <li class="list-group-item list-group-item-${getIcon(locationRes[i].category).listType}" style="width: 100%;">
+            <div class="name">
+                ${locationRes[i].name}
+            </div>
+            <div class="address">
+                ${locationRes[i].vicinity}
+            </div>
+            <div class="rating">
+                Rating: ${locationRes[i].user_rating} stars
+            </div>
+            <div class="button">
+                <button class="btn btn-primary btn-sm" onclick="itinerary.addLocation('${locationRes[i].place_id}')">Add to Itinerary</button>
+            </div>`
+    }
+    resultHTML += '</li></ul>';
+    resultDiv.innerHTML = resultHTML;
+
+}
 
 
 

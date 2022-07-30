@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
 
-var itineraryToSave = mongoose.Schema({
-    user: {type: String, required: false},
+var itinerary = mongoose.Schema({
     itinerary: {type: String, required: true},
-    addresses: {type: String, required: false},
-    uuid: {type: String, required: true, unique: true}
+    uuid: {type: String, required: true}
 });
 
-module.exports = mongoose.model("Itineraries", itineraryToSave);
+module.exports = mongoose.model("Itineraries", itinerary);

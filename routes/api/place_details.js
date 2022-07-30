@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var got = require('got');
 var googleAPIKey = process.env.GOOGLE_API_KEY;
-const ensureAuthenticatedAPI = require('../../config/ensureAuthenticatedAPI');
 
 router.post("/", async(req,res)=>{
 

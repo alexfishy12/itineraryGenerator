@@ -6,7 +6,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 const InitiateMongoServer = require("./dbconfig");
 const expressValidator  = require('express-validator'); //npm install express-validator@5.3.0
-const passport = require("passport");
 var session = require('express-session');
 
 const port = process.env.PORT || 3000;
@@ -18,9 +17,6 @@ InitiateMongoServer.transporter;
 
 //router path
 var indexRouter = require("./routes/index");
-var adminList = require("./routes/api/listget");
-var auth = require("./routes/auth.js");
-var update = require("./routes/update");
 var location = require("./routes/api/address");
 var placeDetails = require("./routes/api/place_details");
 var placeByAddress = require("./routes/api/placeByAddress");
@@ -47,16 +43,10 @@ app.use(session({
 
 // Passport Configs
 var flash = require('connect-flash');
-require("./config/passport")(passport);
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(flash());
 
 //index router
 app.use("/", indexRouter);
-app.use("/list", adminList);
-app.use("/auth", auth);
-app.use("/update", update);
 app.use("/location",location);
 app.use("/placeDetails", placeDetails);
 app.use("/placeByAddress", placeByAddress);
