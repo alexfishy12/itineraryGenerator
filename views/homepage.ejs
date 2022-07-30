@@ -8,10 +8,13 @@
   <script src="/js/lib/jQuery-3.4.1.js"></script>
   <script src="/js/lib/bootstrap.min.js"></script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBj-qnkdxbjjZIlQ9mM4x4bR7L_bXXpDeU&callback=initAutocomplete&libraries=places&v=weekly" defer></script>
-  <script src="/js/map.js"></script>
-  <script src="/js/searchbar.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBj-qnkdxbjjZIlQ9mM4x4bR7L_bXXpDeU&libraries=places&v=weekly" defer></script>
+  <script src="/js/requests.js"></script>
+  <script src="/js/itinerary.js"></script>
+  <script src="/js/mapControls.js"></script>
   <script src="/js/homepage.js"></script>
+  <script src="/js/newMap.js"></script>
+  <script src="/js/searchbar.js"></script>
 
 </head>
 
@@ -20,63 +23,95 @@
   $(function(){
     $("#nav-placeholder").load("/nav");
   });
+
+  $(document).ready(function (){
+    const broadDropdown = $("#broad");
+    const narrowDropdown = $("#narrow");
+    broadDropdown.on("change", function() {
+      switch(broadDropdown.val()) {
+        case "services":
+          narrowDropdown.html(`
+                <% for(var i in services) {%>
+                  <option value="<%=services[i].value%>"><%=services[i].name%></option>
+                <% } %>
+          `)
+        break;
+        case "travel":
+          narrowDropdown.html(`
+                <% for(var i in travel) {%>
+                  <option value="<%=travel[i].value%>"><%=travel[i].name%></option>
+                <% } %>
+          `);
+        break;
+        case "entertainment":
+          narrowDropdown.html(`
+                <% for(var i in entertainment) {%>
+                  <option value="<%=entertainment[i].value%>"><%=entertainment[i].name%></option>
+                <% } %>
+          `);
+        break;
+        case "store":
+          narrowDropdown.html(`
+                <% for(var i in store) {%>
+                  <option value="<%=store[i].value%>"><%=store[i].name%></option>
+                <% } %>
+          `);
+        break;
+        case "general":
+          narrowDropdown.html(`
+                <% for(var i in general) {%>
+                  <option value="<%=general[i].value%>"><%=general[i].name%></option>
+                <% } %>
+          `);
+        break;
+        case "other":
+          narrowDropdown.html(`
+                <% for(var i in other) {%>
+                  <option value="<%=other[i].value%>"><%=other[i].name%></option>
+                <% } %>
+          `);
+        break;
+      }     
+    })
+  })
 </script>
 
 <body class="bodyNav bg-white">
-  <div class="page1 container-fluid" id="formPage">
-    <div class="row">
-      <div class="col-md-3"></div>
-      <form class="col-md-6 text-center">
-        <br><br><br><br>
-        <div class="h3 text-center">First, input desired trip length.</div>
-          <div class="input-group text-center">
-            <input type="number" class="form-control" id="setTime" maxlength="3" size="3" min="1" max="300" placeholder="3" aria-describedby="basic-addon2"/>               
-            <span class="input-group-text" id="basic-addon2">hours</span> 
-          </div>
-          <hr class="hr-text" data-content="NOW,">
-          <div class="h3 text-center">Input Shared Itinerary Code</div>
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">Itinerary Code: </span>
-            <input type="text" id="inputtedCode" class="form-control" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" aria-label="2eb6b710-fcd6-11ec-aa00-0f5625ac58ba" aria-describedby="basic-addon1">
-            <button type="button" class="form-control btn btn-primary col-md-3" id="inputCodeButton" onclick="generateItineraryFromCode()">Submit</button>
-          </div>
-          <hr class="hr-text" data-content="OR">
-          <div class="h3 text-center" id="question">Where does your trip begin?</div>
-          <div id="text-search-div-page1">
-            <input id="pac-input" class="form-control" type="text-search" placeholder="Search"/>
-          </div>
-          <br>
-          <input type="checkbox" class="form-check-input" id="sameAsDest">
-          <label for="sameAsDest" class="form-check-label" id="checkboxLabel">Same location as destination?</label>
-          <br><br>
-          <div class="btn-group">
-            <button type="button" class="btn btn-danger btn-group" onclick="goBack()" id="backButton">Back</button>
-            <button type="button" class="btn btn-primary btn-group" onclick="continueButton()">Continue</button>
-          </div>
-      </form>
-        </div>
-      <div class="col-md-3"></div>
-    </div>
-  </div>
-  <div class="page2 container-fluid mx-3">
-  <div class="row  ">
+  <div class="container-fluid">
+  <div class="row">
     <div id ="HM" class="col col-lg-4">
-      <div id="HC" class="card ">
+      <div id="HC" class="card" style="max-height:100%">
         <div class="card-body">
             <div class="row" id="text-search-div-page2">
-              <!--<input id="pac-input" class="form-control" type="text-search" placeholder="Search"/>-->
+              <input id="pac-input" class="form-control" type="text-search" placeholder="Search"/>
             </div>
             <hr></hr>
-            <div class="row overflow-hidden">
-              <div class="col-3">
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#filterModal">Filters</button>
-                <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalTitle" aria-hidden="true">
+            <div class="row">
+              <div class="container text-center">
+                <div id="dropdownFilters" class="row">
+                  <select id="broad" class="form-control col">
+                    <option value="services">Services</option>
+                    <option value="travel">Travel</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="store">Store/Food</option>
+                    <option value="general">General</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <select id="narrow" class="form-control col">
+                    <% for(var i in services) {%>
+                      <option value="<%=services[i].value%>"><%=services[i].name%></option>
+                    <% } %>
+                  </select>
+                  <button type="button" class="form-control btn btn-success col" id="getLocations">SEARCH</button>
+                </div>
+                <!---<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#filterModal">Filters</button>-->
+                <div class="modal fade text-start" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalTitle" aria-hidden="true">
                   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title" id="filterModalTitle">Filters</h5>
                         
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
@@ -185,7 +220,7 @@
                       <!-- modal-body-end -->
                       <div class="modal-footer">
                         <button type="button" class="btn btn-danger" onclick="clearTypes()">Clear Filters</button>
-                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="getLocations()">Add Filters</button>
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="getLocations()">Add Filters</button>
                       </div>
                     </div>
                   </div>
@@ -198,8 +233,8 @@
                 <div id="timeLeft" class="font-weight-bold"></div>
               </div>
             </div>
-            <hr></hr>
-            <div class="row flex-grow-1 overflow-auto" id="results_div">
+            <hr>
+            <div class="overflow-auto" style="max-height: 50vh;" id="results_div">
               <ul class="list-group" style="width: 100%;">
                 <li class="list-group-item list-group-item-info" style="width: 100%; height: 100%;">
                   Instructions:<br><br>
@@ -212,12 +247,11 @@
             </div>
             <div class="row absolute-bottom">
               <div class="col">
-                <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target=".bd-example-modal-sm">Map Key</button>
+                <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target=".bd-example-modal-sm">Map Key</button>
                   <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-sm">
-                      <div class="modal-content">
-
-                        <div class="container-map">
+                      <div class="modal-content py-2">
+                        <div class="container">
                           <div class="row">
                             <div class="col d-flex justify-content-center">
                               <p>Icon Key</p>
@@ -228,7 +262,7 @@
                               <img src="http://maps.google.com/mapfiles/kml/pal4/icon47.png" alt="Trulli" width="48" height="48">
                             </div>
                             <div class="col d-flex align-items-center">
-                              <p>Search Location</p>
+                              <p>Selected Location</p>
                             </div>
                           </div>
                           <div class="row">
@@ -304,7 +338,7 @@
                   </div>
               </div>
               <div class="col d-flex justify-content-end">
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#itineraryModal">See Itinerary</button>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#itineraryModal">See Itinerary</button>
               </div>
               </div>
             </div>
@@ -313,8 +347,8 @@
       <div id ="HM" class="col">
         <div id="map"></div>
       </div>
-      <div class="modal fade" id="itineraryModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+      <div class="modal modal-xl fade" id="itineraryModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalLabel">Your Trip Itinerary</h5>
@@ -330,9 +364,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <div id="generatedCode"></div>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="generateUniqueCode()" id="generateCodeButton">Generate Code</button>
+                    <div id="generatedCode" class="mr-auto"></div>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="generateUniqueCode()" id="generateCodeButton">Save</button>
                 </div>
             </div>
         </div>

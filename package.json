@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/CPS-5301-Team-2/Backend#readme",
   "dependencies": {
+    "@googlemaps/js-api-loader": "^1.14.3",
     "bcryptjs": "^2.4.3",
+    "bootstrap": "^5.2.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "connect-flash": "^0.1.1",

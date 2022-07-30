@@ -1,162 +1,115 @@
-var currentPage = 1;
-var tripTime = 0;
-var tripTimeToFormat = "";
-var distance = 0;
-var travelTime = 0;
-var desiredTime = 0;
-var itinerary = [];
-var origin;
-var originSet = false;
-var destination;
-var destinationSet = false;
-var currentFormPage = 1;
-
-$(document).ready(function(){
-    setPage(currentPage);
-});
-
-function setTime(hours){
-    desiredTime = hours*60;
-    updateTimeWarning();
-}
-
-function addToItinerary(place_id)
-{
-    getPlaceDetails(place_id).done(function(response){
-        itinerary.splice(itinerary.length-1, 0, response.placeDetails);
+$(document).ready(function() {
+    itinerary.loadFromSessionStorage();
+    console.log("Itinerary is loaded: "+ itinerary.isLoaded());
+    if (!itinerary.isLoaded())
+    {
+        $("html").html(`Please redirect to the index page to begin itinerary 
+            creation from step 1 or load a pre-existing one.<br>
+            <a href="/">Home</a>`);
+            return;
+    }
+    else
+    {
+    }
+    if (itinerary.locations.length > 0)
+    {
         updateItinerary();
+    }
+    $("#getLocations").on("click", function() {
+        getLocationsv2($("#broad").val(), $("#narrow").val());
     })
-}
+});
 
 function updateItinerary()
 {
-    console.log(itinerary);
+    updateModal();
+    itinerary.calculateDistanceMatrix().then(() => {
+        calculateTripSteps();
+        calculateTripTime();
+    })
+    .catch((error) =>{
+        console.log(error);
+    })
+    
+    updateDirections();
+    
+    $("#numLocations").html("Planned locations you will visit: " + (itinerary.locations.length + 2));
+    $("#generateCodeButton").removeAttr("disabled");
+    $("#generatedCode").hide();
+    console.log("Updated directions.");
+}
+
+function updateModal() {
     var itineraryHTML = `<hr/>`;
 
-    if (itinerary.length < 1)
+    if (itinerary.locations.length < 1)
     {
         $("#estTime").html("Estimated length of trip:  0 hours");
         itineraryHTML = `<hr/>
                         Your selected locations will appear here.`;
     }
     else{
-        itinerary.forEach(function(item){
+        var item = itinerary.origin;
+        itineraryHTML += 
+        `<div class="list-group-item" id="place` + item.place_id + `">
+            <div class="row">
+                <div class="col">
+                    <b>` + item.name + `</b>
+                </div>
+                <div class="col text-end">
+                    <button class="btn btn-sm btn-warning" onclick="changeOrigin()">Change Origin</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    ` + item.formatted_address + `
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-right text-align-center">
+                    Estimated stay at this location: 
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <select class="form-control hours" id="selectHours_` + item.name + `" onchange="calculateTripTime()">
+                            <option>0</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                        </select>
+                        <span class="input-group-text">hours</span>
+                        
+                        <select class="form-control minutes" id="selectMinutes_` + item.name + `" onchange="calculateTripTime()">
+                            <option>0</option>
+                            <option selected>15</option>
+                            <option>30</option>
+                            <option>45</option>
+                        </select>
+                        <span class="input-group-text">minutes</span>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+        itinerary.locations.forEach(function(item){
             console.log("Current item: \n");
             console.log(item);
-            if (item.isOrigin)
-            {
-                itineraryHTML += 
-                `<div class="list-group-item" style="background-color:'red';" id="place` + item.place_id + `">
-                    <div class="row">
-                        <div class="col">
-                            <b>` + item.name + `</b>
-                        </div>
-                        <div class="col text-right">
-                            <button class="btn btn-sm btn-warning" onclick="changeOrigin()">Change Origin</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            ` + item.formatted_address + `
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col text-right text-align-center">
-                            Estimated stay at this location: 
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <select class="form-control hours" id="selectHours_` + item.name + `" onchange="calculateTripTime()">
-                                    <option>0</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                    <option>6</option>
-                                    <option>7</option>
-                                    <option>8</option>
-                                    <option>9</option>
-                                    <option>10</option>
-                                    <option>11</option>
-                                    <option>12</option>
-                                </select>
-                                <span class="input-group-text">hours</span>
-                                
-                                <select class="form-control minutes" id="selectMinutes_` + item.name + `" onchange="calculateTripTime()">
-                                    <option>0</option>
-                                    <option selected>15</option>
-                                    <option>30</option>
-                                    <option>45</option>
-                                </select>
-                                <span class="input-group-text">minutes</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>`
-            }
-            else if (item.isDestination)
-            {
-                itineraryHTML += 
+            itineraryHTML += 
                 `<div class="list-group-item" id="place` + item.place_id + `">
                     <div class="row">
                         <div class="col">
                             <b>` + item.name + `</b>
                         </div>
-                        <div class="col text-right">
-                            <button class="btn btn-sm btn-warning" onclick="changeDestination()">Change Destination</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            ` + item.formatted_address + `
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col text-right text-align-center">
-                            Estimated stay at this location: 
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <select class="form-control hours" id="selectHours_` + item.name + `" onchange="calculateTripTime()">
-                                    <option>0</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                    <option>6</option>
-                                    <option>7</option>
-                                    <option>8</option>
-                                    <option>9</option>
-                                    <option>10</option>
-                                    <option>11</option>
-                                    <option>12</option>
-                                </select>
-                                <span class="input-group-text">hours</span>
-                                
-                                <select class="form-control minutes" id="selectMinutes_` + item.name + `" onchange="calculateTripTime()">
-                                    <option>0</option>
-                                    <option selected>15</option>
-                                    <option>30</option>
-                                    <option>45</option>
-                                </select>
-                                <span class="input-group-text">minutes</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>`
-            }
-            else
-            {
-                itineraryHTML += 
-                `<div class="list-group-item" id="place` + item.place_id + `">
-                    <div class="row">
-                        <div class="col">
-                            <b>` + item.name + `</b>
-                        </div>
-                        <div class="col text-right">
-                            <button class="btn btn-sm btn-danger" onclick="removeFromItinerary('` + item.place_id + `')">X</button>
+                        <div class="col text-end">
+                            <button class="btn btn-sm btn-danger" onclick="itinerary.removeLocation('` + item.place_id + `')">X</button>
                         </div>
                     </div>
                     <div class="row">
@@ -202,48 +155,114 @@ function updateItinerary()
                     </div>
                 </div>`
             }
-        });
+        );
+        item = itinerary.destination;
+        itineraryHTML += 
+            `<div class="list-group-item" id="place` + item.place_id + `">
+                <div class="row">
+                    <div class="col">
+                        <b>` + item.name + `</b>
+                    </div>
+                    <div class="col text-end">
+                        <button class="btn btn-sm btn-warning" onclick="changeDestination()">Change Destination</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        ` + item.formatted_address + `
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-right text-align-center">
+                        Estimated stay at this location: 
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <select class="form-control hours" id="selectHours_` + item.name + `" onchange="calculateTripTime()">
+                                <option>0</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                                <option>10</option>
+                                <option>11</option>
+                                <option>12</option>
+                            </select>
+                            <span class="input-group-text">hours</span>
+                            
+                            <select class="form-control minutes" id="selectMinutes_` + item.name + `" onchange="calculateTripTime()">
+                                <option>0</option>
+                                <option selected>15</option>
+                                <option>30</option>
+                                <option>45</option>
+                            </select>
+                            <span class="input-group-text">minutes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>`
     }
-    updateDirections(itinerary);
-    console.log(itineraryHTML);
     $("#itineraryList").html(itineraryHTML);
-    calculateTripSteps(itinerary);
-    $("#numLocations").html("Planned locations you will visit: " + itinerary.length);
-    $("#generateCodeButton").removeAttr("disabled");
-    $("#generatedCode").hide();
-    console.log("Updated directions.");
+
+    var totalTime = itinerary.getTotalTime();
+    tripTimeToFormat = Math.floor(totalTime/60) + " hours " + totalTime%60 + " minutes";
+
+    var travelTime = itinerary.getTotalTravelTime();
+    var walkingTimeToFormat = Math.floor(travelTime/60) + " hours " + travelTime%60 + " minutes";
+
+    $("#estTotalTime").html("Estimated total trip time: " + tripTimeToFormat);
+    $("#estTravelTime").html("Estimated total time walking: " + walkingTimeToFormat);
+    $("#estDistance").html("Estimated total walking distance: " + itinerary.getTotalDistance() + " kilometers");
 }
 
-function removeFromItinerary(selected_place_id)
+function calculateTripSteps(distanceMatrix)
 {
-    var foundMatch = false;
-    itinerary.forEach(function(item)
+    var trip_steps = new Array();
+    
+    console.log(distanceMatrix);
+    console.log(distanceMatrix.rows.length)
+    //turn response matrix into usable trip steps
+    for(var i=0; i < distanceMatrix.rows.length -1; i++)
     {
-        if(item.place_id == selected_place_id)
+        var trip_step = {};
+        if (i == 0)
         {
-            if(confirm("Remove " + item.name + " from your itinerary?"))
-            {
-                const removeByPlaceID = (arr, id) => {
-                    const requiredIndex = arr.findIndex(el => {
-                       return el.place_id === String(selected_place_id);
-                    });
-                    if(requiredIndex === -1){
-                       return false;
-                    };
-                    return !!arr.splice(requiredIndex, 1);
-                 };
-
-                 removeByPlaceID(itinerary, selected_place_id);
-                 updateItinerary();
-            };
-            foundMatch = true;
+            trip_step = {
+                origin: itinerary.getOrigin().formatted_address, 
+                destination: itinerary.locations[i].formatted_address,
+                distance: distanceMatrix.rows[i].elements[i+1].distance,
+                duration: distanceMatrix.rows[i].elements[i+1].duration    
+            }
         }
-    });
+        else if (i == distanceMatrix.rows.length-2)
+        {
+            trip_step = {
+                origin: itinerary.locations[i-1].formatted_address, 
+                destination: itinerary.getDestination().formatted_address,
+                distance: distanceMatrix.rows[i].elements[i+1].distance,
+                duration: distanceMatrix.rows[i].elements[i+1].duration    
+            }
+        }
+        else
+        {
+            trip_step = {
+                origin: itinerary.locations[i-1].formatted_address, 
+                destination: itinerary.locations[i].formatted_address,
+                distance: distanceMatrix.rows[i].elements[i+1].distance,
+                duration: distanceMatrix.rows[i].elements[i+1].duration
+            }
+        }
 
-    if(!foundMatch)
-    {
-        alert("No matches found for selected_place_id:\n " + selected_place_id);
+        trip_steps.push(trip_step);
+        console.log(trip_steps);
     }
+    itinerary.setTripSteps(trip_steps);
+    setTravelTimeandDistance(trip_steps);
 }
 
 function calculateTripTime()
@@ -257,7 +276,6 @@ function calculateTripTime()
     });
 
     $("select[class='form-control minutes']").each(function() {
-        console.log($(this).val());
         switch (parseInt($(this).val())) {
             case 0:
                 visitHours += 0;
@@ -274,24 +292,19 @@ function calculateTripTime()
         }
     });
 
-    console.log("Travel time: " + travelTime);
+    console.log("Travel time: " + itinerary.getTotalTravelTime());
     console.log("Visit hours: " + visitHours);
 
     var visitMinutes = visitHours * 60;
 
-    tripTime = visitMinutes + travelTime;
-    tripTimeToFormat = Math.floor(tripTime/60) + " hours " + tripTime%60 + " minutes";
-
-    var walkingTimeToFormat = Math.floor(travelTime/60) + " hours " + travelTime%60 + " minutes";
-    $("#estTotalTime").html("Estimated total trip time: " + tripTimeToFormat);
-    $("#estTravelTime").html("Estimated total time walking: " + walkingTimeToFormat);
-    $("#estDistance").html("Estimated total walking distance: " + distance + " kilometers");
     updateTimeWarning();
-    return travelTime + visitHours;
 }
 
 function updateTimeWarning()
 {
+    const desiredTime = itinerary.getDesiredTime();
+    const tripTime = itinerary.getTotalTime();
+
     if(desiredTime - tripTime < 0)
     {
         $("#timeWarning").attr("class", "badge bg-danger text-white");
@@ -312,413 +325,24 @@ function updateTimeWarning()
 //takes trip_steps array and extracts each trip step duration and adds them all up
 function setTravelTimeandDistance(trip_steps)
 {
-    travelTime = 0;
-
+    var distance = 0;
+    var travelTime = 0;
+    
     console.log("trip steps: ");
     console.log(trip_steps);
 
     trip_steps.forEach(function(trip_step){
-        travelTime += trip_step.duration.value;
         distance += trip_step.distance.value;
+        travelTime += trip_step.duration.value;
         console.log(trip_step);
     })
-
+    
     distance = Math.round(parseFloat(distance)/100)/10;
     travelTime = Math.ceil(travelTime / 60);
     console.log("Travel distance: " + distance + " km")
     console.log("Travel time: " + travelTime + " mins")
-}
-
-function goBack()
-{
-    if (currentPage == 1)
-    {
-        console.log("Cannot go back.");
-        return;
-    }
-    else
-    {
-        currentPage -= 1;
-        console.log("Going to page " + currentPage);
-        setPage(currentPage);
-    }
-}
-
-function goNext()
-{
-    setPage(2);
-    moveTextSearch(2);
-}
-
-function moveTextSearch(pageNum)
-{
-    if(pageNum == 1)
-    {
-        $("#pac-input").val("");
-        $("#pac-input").appendTo("#text-search-div-page1");
-    }
-    else if(pageNum == 2)
-    {
-        $("#pac-input").val("");
-        $("#pac-input").appendTo("#text-search-div-page2");
-    }
-}
-
-function setPage(pageNum)
-{
-    if(pageNum==1)
-    {
-        currentFormPage = 1;
-        moveTextSearch(1);
-    }
-    $("[class*='page']").each(function(){
-        console.log(this);
-        $(this).hide();
-    })
-    $("[class*='page" + pageNum + "']").each(function() {
-        console.log(this);
-        $(this).show();
-    });
-
-    setTime($("#setTime").val());
-}
-
-function continueButton()
-{
-    if(currentFormPage == 1)
-    {
-        setOrigin();
-        console.log($("#sameAsDest").is(":checked"));
-        if($("#sameAsDest").is(":checked"))
-        {
-            setDestination();
-            goNext();
-        }
-        else
-        {
-            $("#question").text("Where do you plan to finish your trip?");
-            $("#sameAsDest").hide();
-            $("#checkboxLabel").hide();
-            $("#backButton").show();
-            currentFormPage = 2
-        }
-    }
-    else if(currentFormPage == 2)
-    {
-        setDestination();
-        goNext();
-    }
-}
-
-function setOrigin()
-{
-    origin = $("#pac-input").val();
-    console.log("Origin: " + origin);
-    
-    get_place_id(origin).done(function(response){
-        // console.log("get_place_id response: ")
-        // console.log(response.placeID);
-        getPlaceDetails(response.placeID).done(function(response){
-            // console.log("Place details: ");
-            // console.log(response.placeDetails);
-            place = response.placeDetails;
-            place.isOrigin = true;
-
-            if (originSet)
-            {
-                itinerary[0] = place;
-            }
-            else
-            {
-                itinerary[0] = place;
-            }
-            originSet = true;
-        });
-    });
-}
-
-function goBack()
-{
-    $("#question").text("Where does your trip begin?");
-    $("#sameAsDest").show();
-    $("#checkboxLabel").show();
-    $("#backButton").hide();
-    currentFormPage = 1;
-}
-
-function setDestination()
-{
-    destination = $("#pac-input").val();
-    console.log("Destination: " + destination);
-
-    get_place_id(destination).done(function(response){
-        // console.log("get_place_id response: ")
-        // console.log(response.placeID);
-        getPlaceDetails(response.placeID).done(function(response){
-            // console.log("Place details: ");
-            // console.log(response.placeDetails);
-            place = response.placeDetails;
-            place.isDestination = true;
-
-            if (destinationSet)
-            {
-                itinerary[itinerary.length-1] = place;
-            }
-            else
-            {
-                itinerary[itinerary.length] = place;
-            }
-            destinationSet = true;
-        });
-    });
-}
-
-function getOrigin()
-{
-    return origin;
-}
-
-function getDest()
-{
-    return destination;
-}
-
-function get_place_id(location)
-{
-    return $.ajax({
-        url: "/placeByaddress",
-        method: "POST",
-        data: {
-            location: location
-        },
-        success: (res)=>{
-            console.log("Successfully retrieved place id for " + location);
-            // return res.placeID;
-        },
-        error: (error, response, textStatus) => {
-            console.log("error");
-            return error;
-        }
-    });
-}
-
-function getPlaceDetails(place_id)
-{
-    return $.ajax({
-        url: "/placeDetails",
-        method: "POST",
-        data: {
-            place_id: place_id,
-        },
-        success: (res)=>{
-            console.log("Successfully retrieved place details for " + place_id);
-        },
-        error: (error, response, textStatus) => {
-            console.log("error");
-            console.log(error);
-        }
-    });
-}
-
-function addOriginToItinerary(origin_id){
-    $.ajax({
-        url: "/placeDetails",
-        method: "POST",
-        data: {
-            place_id: origin_id,
-        },
-        success: (res)=>{
-            place = res.placeDetails;
-            console.log("Successfully retrieved place details for " + origin_id);
-            console.log(place);
-            itinerary[0] = place;
-        },
-        error: (error, response, textStatus) => {
-            console.log("error");
-            console.log(error);
-        }
-    });
-}
-
-function generateUniqueCode()
-{
-    console.log("Generating unique code...");
-    $.ajax({
-        url: "/codeGeneration",
-        method: "POST",
-        data: {
-            itinerary: itinerary
-        },
-        success: (res) => {
-            console.log("Successfully generated code.");
-            console.log("Generated code: " + res.unique_code);
-            $("#generatedCode").html("This itinerary's unique code is: <b>" + res.unique_code + "</b>");
-            $("#generatedCode").show();
-            saveItineraryToDatabase(itinerary, res.unique_code);
-        },
-        error: (error, response, textStatus) => {
-            console.log("error");
-            console.log(error);
-        }
-    });
-}
-
-function saveItineraryToDatabase(itinerary, unique_code)
-{
-    console.log("Saving to database...");
-    var place_id_array = new Array();
-    var address_array = new Array();
-
-    itinerary.forEach(function(place){
-        place_id_array.push(place.place_id);
-        address_array.push(place.formatted_address)
-    })
-    console.log(place_id_array);
-    var place_id_JsonString = JSON.stringify(place_id_array);
-    var address_array_JsonString = JSON.stringify(address_array);
-
-    $.ajax({
-        url: "/codeGeneration/saveToDatabase",
-        method: "PUT",
-        dataType: "text",
-        data: {
-            itinerary: place_id_JsonString,
-            addresses: address_array_JsonString,
-            unique_code: unique_code
-        },
-        success: (res) => {
-            console.log("Successfully saved to database.");
-            $("#generateCodeButton").attr("disabled", "disabled");
-            sendEmail(unique_code);
-            // $("#generateCodeButton").hide();
-            console.log(res);
-        },
-        error: (error) => {
-            console.log("Saving error.");
-            console.log(error);
-        },
-        complete: function(data) {
-            console.log("Saved to database.")
-        }
-    })
-}
-
-function generateItineraryFromCode()
-{
-    $("#inputCodeButton").attr("disabled", "disabled");
-    var unique_code = $("#inputtedCode").val();
-    //check if code is valid
-    if(unique_code != "")
-    {
-        //error message: code valid, continue
-        //check if code exists
-        $.ajax({
-            url: "/codeGeneration/getItinerary",
-            method: "POST",
-            dataType: "json",
-            data: {
-                unique_code: unique_code
-            },
-            success: (res) => {
-                console.log("AJAX Success.");
-                console.log(res);
-                if (res.error)
-                {
-                    alert(res.error);
-                }
-                else
-                {
-                    loadSavedItinerary(res.databaseRecord.itinerary, unique_code);
-                }
-            },
-            error: (error) => {
-                console.log("AJAX error.");
-                alert("AJAX error.");
-                console.log(error);
-            }
-        })
-    }
-    else
-    {
-        //error message: code invalid
-
-    }
-}
-
-async function loadSavedItinerary(savedItinerary, unique_code)
-{
-    var savedItinerary = JSON.parse(savedItinerary);
-    console.log(savedItinerary);
-
-    //own add function
-    var count = 0;
-    
-    for(const place_id of savedItinerary) {
-        await getPlaceDetails(place_id).done(function(response){
-            if (count == 0)
-            {
-                origin = response.placeDetails.formatted_address;
-                response.placeDetails.isOrigin = true;
-                originSet = true;
-            }
-            else if(count == savedItinerary.length-1)
-            {
-                destination = response.placeDetails.formatted_address;
-                response.placeDetails.isDestination = true;
-                destinationSet = true;
-            }
-            itinerary.push(response.placeDetails);
-            
-            if (count === savedItinerary.length -1) 
-            {
-                allDone();
-            }
-            else 
-            {
-                count++;
-            }
-        });
-    }
-    
-    function allDone()
-    {
-        setPage(2);
-        moveTextSearch(2);
-        updateItinerary();
-        $("#generateCodeButton").attr("disabled", "disabled");
-        $("#generatedCode").html("This itinerary's unique code is: <b>" + unique_code + "</b>");
-        $("#generatedCode").show();
-        console.log(itinerary);
-    }
-
-    // savedItinerary.forEach(function(place_id){
-    //     getPlaceDetails(place_id).done(function(response){
-    //         if (count == 0)
-    //         {
-    //             origin = response.placeDetails.formatted_address;
-    //             response.placeDetails.isOrigin = true;
-    //             originSet = true;
-    //         }
-    //         else if(count == savedItinerary.length-1)
-    //         {
-    //             destination = response.placeDetails.formatted_address;
-    //             response.placeDetails.isDestination = true;
-    //             destinationSet = true;
-    //         }
-    //         itinerary.push(response.placeDetails);
-    //         count++;
-    //     })
-    // })
-}
-
-function changeOrigin()
-{
-
-}
-
-function changeDestination()
-{
-
+    itinerary.setTravelTime(travelTime);
+    itinerary.setDistance(distance);
 }
 
 function sendEmail(unique_code)

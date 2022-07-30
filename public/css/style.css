@@ -58,11 +58,12 @@
 
   .bodyNav { 
   padding-top: 0px;
-  background-color: #bbaaaa; 
+  background-color: #bbaaaa;
   }
 
   .navbar {
     margin-bottom: 0px;
+    height: 8vh;
   }
   /* Homepage "Change color schema after decesion is made"
   ========================================= */
@@ -79,7 +80,7 @@
 /* Optional: Makes the sample page fill the window. */
 html,
 body {
-  height: 94%;
+  height: 100%;
   margin: 0px;
   padding: 0;
 }
@@ -168,11 +169,13 @@ body {
     margin: 0;
     /* border: 1px solid black; */
     height: 85vh;
+    max-height:85vh;
   }
 
   #HC{
     margin-left: 0px;
     height: 85vh;
+    max-height:85vh;
   }
 
   input[type=text-search] {

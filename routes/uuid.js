@@ -1,6 +1,6 @@
 const uuid = require('uuid');
 var express = require('express');
-const ItineraryToSave = require('../model/itineraries');
+const Itinerary = require('../model/itineraries');
 var router = express.Router();
 
 router.post("/", async(req,res)=>{
@@ -29,13 +29,13 @@ router.put("/saveToDatabase", async (req, res) => {
     console.log("whole request body: \n");
     console.log(req.body);
     console.log("Unique code: " + unique_code);
-    console.log("Itinerary (place IDs): \n");
+    console.log("Itinerary (object): \n");
     console.log(itinerary);
 
     try
     {
-        //check if username is already taken
-        let itineraryToSave = await ItineraryToSave.findOne({unique_code});
+        //check if unique code is already taken
+        let itineraryToSave = await Itinerary.findOne({unique_code});
         if(itineraryToSave)
         {
             return res.status(400).json({
@@ -43,7 +43,7 @@ router.put("/saveToDatabase", async (req, res) => {
             });
         }
 
-        itineraryToSave = new ItineraryToSave({
+        itineraryToSave = new Itinerary({
             itinerary: itinerary,
             uuid: unique_code
         });
@@ -73,7 +73,7 @@ router.post("/getItinerary", async (req, res) => {
     try
     {
         //check if code exists in database
-        let databaseRecord = await ItineraryToSave.findOne({'uuid': unique_code});
+        let databaseRecord = await Itinerary.findOne({'uuid': unique_code});
         if(databaseRecord)
         {
             console.log(databaseRecord);
