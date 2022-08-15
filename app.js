@@ -22,6 +22,7 @@ var placeDetails = require("./routes/api/place_details");
 var placeByAddress = require("./routes/api/placeByAddress");
 var codeGeneration = require("./routes/uuid.js");
 var sendEmail = require("./routes/sendEmail");
+var categories = require("./routes/categories.js");
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -52,6 +53,7 @@ app.use("/placeDetails", placeDetails);
 app.use("/placeByAddress", placeByAddress);
 app.use("/codeGeneration", codeGeneration);
 app.use("/sendEmail", sendEmail);
+app.use("/categories", categories);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

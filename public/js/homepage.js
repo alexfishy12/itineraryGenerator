@@ -8,39 +8,35 @@ $(document).ready(function() {
             <a href="/">Home</a>`);
             return;
     }
-    else
+    if (itinerary.loadedFromDatabase)
     {
+        itinerary.update();
     }
-    if (itinerary.locations.length > 0)
-    {
-        updateItinerary();
-    }
-    $("#getLocations").on("click", function() {
-        getLocationsv2($("#broad").val(), $("#narrow").val());
+
+    $(document).on('click','.change_origin',function(){
+        console.log("Executing change origin...");
+    });
+
+    $(document).on('click', ".change_destination", function () {
+        console.log("Executing change destination...");
+    })
+
+    $(document).on('click', '.addToItinerary', function (){
+        console.log("Executing addToItinerary");
+        var string = $(this).attr('id');
+        const place = JSON.parse(string);
+        console.log(place);
+        addToItinerary(place);
+    });
+
+    $(document).on('click', '.removeFromItinerary', function () {
+        const place_id = $(this).attr('id');
+        removeFromItinerary(place_id);
     })
 });
 
-function updateItinerary()
-{
-    updateModal();
-    itinerary.calculateDistanceMatrix().then(() => {
-        calculateTripSteps();
-        calculateTripTime();
-    })
-    .catch((error) =>{
-        console.log(error);
-    })
-    
-    updateDirections();
-    
-    $("#numLocations").html("Planned locations you will visit: " + (itinerary.locations.length + 2));
-    $("#generateCodeButton").removeAttr("disabled");
-    $("#generatedCode").hide();
-    console.log("Updated directions.");
-}
-
 function updateModal() {
-    var itineraryHTML = `<hr/>`;
+    var itineraryHTML = ``;
 
     if (itinerary.locations.length < 1)
     {
@@ -57,7 +53,7 @@ function updateModal() {
                     <b>` + item.name + `</b>
                 </div>
                 <div class="col text-end">
-                    <button class="btn btn-sm btn-warning" onclick="changeOrigin()">Change Origin</button>
+                    <button class="btn btn-sm btn-warning change_origin">Change Origin</button>
                 </div>
             </div>
             <div class="row">
@@ -71,24 +67,24 @@ function updateModal() {
                 </div>
                 <div class="col">
                     <div class="input-group mb-3">
-                        <select class="form-control hours" id="selectHours_` + item.name + `" onchange="calculateTripTime()">
-                            <option>0</option>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                            <option>7</option>
-                            <option>8</option>
-                            <option>9</option>
-                            <option>10</option>
-                            <option>11</option>
-                            <option>12</option>
+                        <select class="form-control hours" id="selectHours_` + item.place_id + `">
+                            <option val="0">0</option>
+                            <option val="1">1</option>
+                            <option val="2">2</option>
+                            <option val="3">3</option>
+                            <option val="4">4</option>
+                            <option val="5">5</option>
+                            <option val="6">6</option>
+                            <option val="7">7</option>
+                            <option val="8">8</option>
+                            <option val="9">9</option>
+                            <option val="10">10</option>
+                            <option val="11">11</option>
+                            <option val="12">12</option>
                         </select>
                         <span class="input-group-text">hours</span>
                         
-                        <select class="form-control minutes" id="selectMinutes_` + item.name + `" onchange="calculateTripTime()">
+                        <select class="form-control minutes" id="selectMinutes_` + item.place_id + `">
                             <option>0</option>
                             <option selected>15</option>
                             <option>30</option>
@@ -100,8 +96,6 @@ function updateModal() {
             </div>
         </div>`;
         itinerary.locations.forEach(function(item){
-            console.log("Current item: \n");
-            console.log(item);
             itineraryHTML += 
                 `<div class="list-group-item" id="place` + item.place_id + `">
                     <div class="row">
@@ -109,7 +103,7 @@ function updateModal() {
                             <b>` + item.name + `</b>
                         </div>
                         <div class="col text-end">
-                            <button class="btn btn-sm btn-danger" onclick="itinerary.removeLocation('` + item.place_id + `')">X</button>
+                            <button class="btn btn-sm btn-danger removeFromItinerary" id="` + item.place_id + `">X</button>
                         </div>
                     </div>
                     <div class="row">
@@ -126,26 +120,26 @@ function updateModal() {
                         </div>
                         <div class="col">
                             <div class="input-group mb-3">
-                                <select class="form-control hours" id="selectHours_` + item.name + `" onchange="calculateTripTime()">
-                                    <option>0</option>
-                                    <option selected>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                    <option>6</option>
-                                    <option>7</option>
-                                    <option>8</option>
-                                    <option>9</option>
-                                    <option>10</option>
-                                    <option>11</option>
-                                    <option>12</option>
+                                <select class="form-control hours" id="selectHours_` + item.place_id + `">
+                                    <option val="0">0</option>
+                                    <option val="1">1</option>
+                                    <option val="2">2</option>
+                                    <option val="3">3</option>
+                                    <option val="4">4</option>
+                                    <option val="5">5</option>
+                                    <option val="6">6</option>
+                                    <option val="7">7</option>
+                                    <option val="8">8</option>
+                                    <option val="9">9</option>
+                                    <option val="10">10</option>
+                                    <option val="11">11</option>
+                                    <option val="12">12</option>
                                 </select>
                                 <span class="input-group-text">hours</span>
                                 
-                                <select class="form-control minutes" id="selectMinutes_` + item.name + `" onchange="calculateTripTime()">
+                                <select class="form-control minutes" id="selectMinutes_` + item.place_id + `">
                                     <option>0</option>
-                                    <option>15</option>
+                                    <option selected>15</option>
                                     <option>30</option>
                                     <option>45</option>
                                 </select>
@@ -164,7 +158,7 @@ function updateModal() {
                         <b>` + item.name + `</b>
                     </div>
                     <div class="col text-end">
-                        <button class="btn btn-sm btn-warning" onclick="changeDestination()">Change Destination</button>
+                        <button class="btn btn-sm btn-warning change_destination">Change Destination</button>
                     </div>
                 </div>
                 <div class="row">
@@ -178,24 +172,24 @@ function updateModal() {
                     </div>
                     <div class="col">
                         <div class="input-group mb-3">
-                            <select class="form-control hours" id="selectHours_` + item.name + `" onchange="calculateTripTime()">
-                                <option>0</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
-                                <option>9</option>
-                                <option>10</option>
-                                <option>11</option>
-                                <option>12</option>
+                            <select class="form-control hours" id="selectHours_` + item.place_id + `">
+                                <option val="0">0</option>
+                                <option val="1">1</option>
+                                <option val="2">2</option>
+                                <option val="3">3</option>
+                                <option val="4">4</option>
+                                <option val="5">5</option>
+                                <option val="6">6</option>
+                                <option val="7">7</option>
+                                <option val="8">8</option>
+                                <option val="9">9</option>
+                                <option val="10">10</option>
+                                <option val="11">11</option>
+                                <option val="12">12</option>
                             </select>
                             <span class="input-group-text">hours</span>
                             
-                            <select class="form-control minutes" id="selectMinutes_` + item.name + `" onchange="calculateTripTime()">
+                            <select class="form-control minutes" id="selectMinutes_` + item.place_id + `">
                                 <option>0</option>
                                 <option selected>15</option>
                                 <option>30</option>
@@ -218,6 +212,66 @@ function updateModal() {
     $("#estTotalTime").html("Estimated total trip time: " + tripTimeToFormat);
     $("#estTravelTime").html("Estimated total time walking: " + walkingTimeToFormat);
     $("#estDistance").html("Estimated total walking distance: " + itinerary.getTotalDistance() + " kilometers");
+
+
+    $("select[class='form-control hours']").each(function (i, obj) {
+        const place_id = $(this).attr('id').split(/_(.*)/s)[1];
+        const location = itinerary.getLocationByPlaceID(place_id);
+        const timeToSpend = location.timeToSpend;
+
+        const hours = Math.floor(timeToSpend / 60);
+        $(this).val(hours);
+    })
+    $("select[class='form-control minutes']").each(function (i, obj) {
+        const place_id = $(this).attr('id').split(/_(.*)/s)[1];
+        const location = itinerary.getLocationByPlaceID(place_id);
+        const timeToSpend = location.timeToSpend;
+        const minutes = timeToSpend%60;
+    
+        $(this).val(minutes);
+    })
+
+    $("select[class='form-control hours'], select[class='form-control minutes']").on("change", function() {
+        const place_id = $(this).attr('id').split(/_(.*)/s)[1];
+        const totalTime = (getTotalTime(place_id));
+        itinerary.setLocationTimeToSpend(place_id, totalTime)
+        updateModal();
+        updateTimeWarning();
+    });
+
+    function getTotalTime(place_id) {
+        var hours = parseInt($("select[id='selectHours_" + place_id + "'").val());
+        var minutes = parseInt($("select[id='selectMinutes_" + place_id + "'").val());
+
+        minutes += hours*60;
+
+        return minutes;
+    }
+}
+
+function addToItinerary(place) {
+    const PLACE = place;
+    console.log(PLACE);
+    itinerary.addLocation(PLACE).then((placeDetails) =>{
+        placeDetails.type = place.type;
+        placeDetails.category = place.category;
+        console.log(placeDetails);
+        mapControls.addItineraryMarker(placeDetails);
+        mapControls.clearSearchMarkers();
+        mapControls.calculateRoute();
+        mapControls.showRoute();
+        itinerary.update();
+        $("#results_div").html("");
+    });
+}
+
+function removeFromItinerary(place_id)
+{
+    itinerary.removeLocation(place_id);
+    mapControls.clearItineraryMarkers();
+    mapControls.removeItineraryMarker(place_id);
+    mapControls.showAllItineraryMarkers();
+    mapControls.calculateRoute();
 }
 
 function calculateTripSteps(distanceMatrix)
@@ -227,34 +281,47 @@ function calculateTripSteps(distanceMatrix)
     console.log(distanceMatrix);
     console.log(distanceMatrix.rows.length)
     //turn response matrix into usable trip steps
-    for(var i=0; i < distanceMatrix.rows.length -1; i++)
+
+    if (itinerary.locations.length < 1)
     {
-        var trip_step = {};
-        if (i == 0)
-        {
-            trip_step = {
-                origin: itinerary.getOrigin().formatted_address, 
-                destination: itinerary.locations[i].formatted_address,
-                distance: distanceMatrix.rows[i].elements[i+1].distance,
-                duration: distanceMatrix.rows[i].elements[i+1].duration    
-            }
+        var trip_step = {
+            origin: itinerary.getOrigin().formatted_address,
+            destination: itinerary.getDestination().formatted_address,
+            distance: distanceMatrix.rows[0].elements[1].distance,
+            duration: distanceMatrix.rows[0].elements[1].duration
         }
-        else if (i == distanceMatrix.rows.length-2)
+        trip_steps.push(trip_step);
+    }
+    else {
+        for(var i=0; i < distanceMatrix.rows.length -1; i++)
         {
-            trip_step = {
-                origin: itinerary.locations[i-1].formatted_address, 
-                destination: itinerary.getDestination().formatted_address,
-                distance: distanceMatrix.rows[i].elements[i+1].distance,
-                duration: distanceMatrix.rows[i].elements[i+1].duration    
+            var trip_step = {};
+            if (i == 0)
+            {
+                trip_step = {
+                    origin: itinerary.getOrigin().formatted_address, 
+                    destination: itinerary.locations[i].formatted_address,
+                    distance: distanceMatrix.rows[i].elements[i+1].distance,
+                    duration: distanceMatrix.rows[i].elements[i+1].duration    
+                }
             }
-        }
-        else
-        {
-            trip_step = {
-                origin: itinerary.locations[i-1].formatted_address, 
-                destination: itinerary.locations[i].formatted_address,
-                distance: distanceMatrix.rows[i].elements[i+1].distance,
-                duration: distanceMatrix.rows[i].elements[i+1].duration
+            else if (i == distanceMatrix.rows.length-2)
+            {
+                trip_step = {
+                    origin: itinerary.locations[i-1].formatted_address, 
+                    destination: itinerary.getDestination().formatted_address,
+                    distance: distanceMatrix.rows[i].elements[i+1].distance,
+                    duration: distanceMatrix.rows[i].elements[i+1].duration    
+                }
+            }
+            else
+            {
+                trip_step = {
+                    origin: itinerary.locations[i-1].formatted_address, 
+                    destination: itinerary.locations[i].formatted_address,
+                    distance: distanceMatrix.rows[i].elements[i+1].distance,
+                    duration: distanceMatrix.rows[i].elements[i+1].duration
+                }
             }
         }
 
@@ -305,20 +372,27 @@ function updateTimeWarning()
     const desiredTime = itinerary.getDesiredTime();
     const tripTime = itinerary.getTotalTime();
 
+    const totalTime = Math.abs(desiredTime - tripTime);
+    const totalHours = Math.floor(totalTime / 60);
+    const totalMinutes = totalTime % 60;
+
     if(desiredTime - tripTime < 0)
     {
         $("#timeWarning").attr("class", "badge bg-danger text-white");
-        $("#timeWarning").text("Your estimated trip time is over your desired time of " + desiredTime/60 + " hours!");
+        if (totalHours > 0)
+            $("#timeWarning").text(`Over your desired trip time by ${totalHours} hours and ${totalMinutes} minutes!`);
+        else
+            $("#timeWarning").text(`Over your desired trip time by ${totalMinutes} minutes!`);
     }
     else if (desiredTime - tripTime < 60)
     {
         $("#timeWarning").attr("class", "badge bg-warning text-black");
-        $("#timeWarning").text("Your estimated trip time is less than one more hour from exceeding your desired trip time of " + desiredTime/60 + " hours!");
+        $("#timeWarning").text("Only " + (desiredTime - tripTime) + " minutes left to budget!");
     }
     else
     {
         $("#timeWarning").attr("class", "badge bg-success text-white");
-        $("#timeWarning").text("You have " + (desiredTime - tripTime) + " minutes left to budget for this trip.");
+        $("#timeWarning").text(`${totalHours} hours and ${totalMinutes} minutes left to budget.`);
     }
 }
 
@@ -328,21 +402,21 @@ function setTravelTimeandDistance(trip_steps)
     var distance = 0;
     var travelTime = 0;
     
-    console.log("trip steps: ");
-    console.log(trip_steps);
-
     trip_steps.forEach(function(trip_step){
         distance += trip_step.distance.value;
         travelTime += trip_step.duration.value;
-        console.log(trip_step);
     })
     
     distance = Math.round(parseFloat(distance)/100)/10;
     travelTime = Math.ceil(travelTime / 60);
-    console.log("Travel distance: " + distance + " km")
-    console.log("Travel time: " + travelTime + " mins")
     itinerary.setTravelTime(travelTime);
     itinerary.setDistance(distance);
+}
+
+function saveItinerary()
+{
+    itinerary.setMapControls(mapControls);
+    generateUniqueCode();
 }
 
 function sendEmail(unique_code)
@@ -355,6 +429,8 @@ function sendEmail(unique_code)
         <br><br>
         Your itinerary's unique code: <strong> ` + unique_code + ` </strong>
         <br><br>
+        Follow the link below to get to our website!
+        <a href="https://itinerary-generator.herokuapp.com" target="_blank">https://itinerary-generator.herokuapp.com</a>
         Best,
         <br>
         Itinerary Generator team
@@ -394,7 +470,7 @@ function sendEmail(unique_code)
         }
         else
         {
-            alert("Email will not be sent. Please save code in a safe place to regenerate this itinerary.");
+            alert("Email will not be sent. Please save code in a safe place in order to retrieve this itinerary later.");
         }
     }
     askForEmail();

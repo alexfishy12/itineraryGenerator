@@ -2,41 +2,59 @@
     "Services":[
         {
             "name": "Bank",
-            "value": "bank"
+            "value": "bank",
+            "b_icon": "b_bank.png",
+            "w_icon": "w_bank.png"
         },
         {
             "name": "Beauty Salon",
-            "value": "beauty_salon"
+            "value": "beauty_salon",
+            "b_icon": "b_scissors.png",
+            "w_icon": "w_scissors.png"
         },
         {
             "name": "Gym",
-            "value": "gym"
+            "value": "gym",
+            "b_icon": "b_gym.png",
+            "w_icon": "w_gym.png"
         },
         {
             "name": "Hair Care",
-            "value": "hair_care"
+            "value": "hair_care",
+            "b_icon": "b_scissors.png",
+            "w_icon": "w_scissors.png"
         },
         {
             "name": "Lodging",
-            "value": "lodging"
+            "value": "lodging",
+            "b_icon": "b_bed.png",
+            "w_icon": "w_bed.png"
         },
         {
             "name": "Real Estate Agency",
-            "value": "real_estate_agency"
+            "value": "real_estate_agency",
+            "b_icon": "b_realestate.png",
+            "w_icon": "w_realestate.png"
         },
         {
             "name": "Spa",
-            "value": "spa"
+            "value": "spa",
+            "b_icon": "b_spa.png",
+            "w_icon": "w_spa.png"
         }
     ],
     "Travel":[
         {
             "name": "Airport",
-            "value": "airport"
+            "value": "airport",
+            "b_icon": "b_plane.png",
+            "w_icon": "w_plane.png"
         },
         {
             "name": "Bus Station",
-            "value": "bus_station"
+            "value": "bus_station",
+            "b_icon": "b_bus.png",
+            "w_icon": "w_bus.png"
         },
         {
             "name": "Car Dealer",

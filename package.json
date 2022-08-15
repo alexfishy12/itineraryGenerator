@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/CPS-5301-Team-2/Backend#readme",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@googlemaps/js-api-loader": "^1.14.3",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.2.0",

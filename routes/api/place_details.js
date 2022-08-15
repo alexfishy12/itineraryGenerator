@@ -5,6 +5,8 @@ var googleAPIKey = process.env.GOOGLE_API_KEY;
 
 router.post("/", async(req,res)=>{
 
+    console.log("Request body:\n")
+    console.log(req.body);
     //get post variables
     var place_id = req.body.place_id;
 

@@ -1,8 +1,10 @@
 const itinerary = {
     loaded: false,
+    loadedFromDatabase: false,
+    mapControls: null,
     defaultOriginTime: 15,
     defaultDestinationTIme: 15,
-    defaultLocationTime: 60,
+    defaultLocationTime: 15,
     origin: {},
     destination: {},
     locations: [],
@@ -21,9 +23,24 @@ const itinerary = {
     getDestination: function () {
         return this.destination;
     },
-    getLocation: function (place_id) { //parameter takes array index of itinerary.locations
-        //return this.locations[num];
-        return this.locations.find(location => location.place_id === place_id);
+    getLocationByNum: function (num) { //parameter takes array index of itinerary.locations
+        num = parseInt(num);
+        return this.locations[num-1];
+    },
+    getLocationByPlaceID: function (place_id) {
+        var index = this.locations.findIndex(location => location.place_id === place_id);
+        if (index != -1 && index !== undefined)
+        {
+            return this.locations[index];
+        }
+        else if (place_id == this.origin.place_id)
+        {
+            return this.origin;
+        }
+        else if (place_id == this.destination.place_id)
+        {
+            return this.destination;
+        }
     },
     getDistanceMatrix: function () {
         this.tripData.distanceMatrix;
@@ -92,23 +109,38 @@ const itinerary = {
     setDistance: function (km) {
         this.tripData.distance = km;
     },
-    addLocation: function (place_id) {
-        getPlaceDetails(place_id).done(function(response) {
-            itinerary.locations.push(response.placeDetails);
-            itinerary.setLocationTimeToSpend(place_id, itinerary.defaultLocationTime);
-            mapControls.addLocationMarker(response.placeDetails);
-            itinerary.update();
+    addLocation: function (place) {
+        return new Promise((resolve, reject) => {
+            getPlaceDetails(place.place_id).done(function(response) {
+                response.placeDetails.type = place.type;
+                response.placeDetails.category = place.category;
+                itinerary.locations.push(response.placeDetails);
+                itinerary.setLocationTimeToSpend(place.place_id, itinerary.defaultLocationTime);
+                resolve(response.placeDetails);
+            }).catch((error) => {
+                reject(error);
+            })
         });
     },
     removeLocation: function (place_id) {
         var itemIndexToRemove = this.locations.findIndex(location => location.place_id === place_id);
         this.locations.splice(itemIndexToRemove, 1);
-        updateItinerary();
+        this.update();
     },
     setDesiredTime: function (hours) {
         this.tripData.desiredTime = 60*hours;
     },
+    setMapControls: function (mapControls) {       
+        this.mapControls = {
+            routeVisible: mapControls.routeVisible, 
+            categories: mapControls.categories,
+            selectedLocation: mapControls.selectedLocation,
+            itineraryMarkers: mapControls.itineraryMarkers,
+            searchMarkers: mapControls.searchMarkers,
+        }
+    },
     set: function (savedItinerary) {
+        this.loadedFromDatabase = savedItinerary.loadedFromDatabase;
         this.origin = savedItinerary.origin;
         this.destination = savedItinerary.destination;
         this.locations = savedItinerary.locations;
@@ -136,6 +168,7 @@ const itinerary = {
                 requestItineraryFromDatabase(unique_code).then((savedItinerary) => {
                     console.log("Itinerary pulled from database: ");
                     console.log(savedItinerary);
+                    itinerary.loadedFromDatabase = true;
                 itinerary.set(savedItinerary);
                 itinerary.setSessionStorage();
                 resolve();
@@ -148,7 +181,6 @@ const itinerary = {
     setLocationTimeToSpend: function (place_id, minutes) {
         //this.locations[place_id].timeToSpend = minutes;
         var index = this.locations.findIndex(location => location.place_id === place_id);
-        console.log(index);
         if (index != -1 && index !== undefined)
         {
             this.locations[index].timeToSpend = minutes;
@@ -161,6 +193,7 @@ const itinerary = {
         {
             this.destination.timeToSpend = minutes;
         }
+        this.calculateTotalLocationTime();
     },
     calculateDistanceMatrix: function ()
     {
@@ -195,6 +228,7 @@ const itinerary = {
     update: function () {
         console.log("updating itinerary");
         itinerary.calculateDistanceMatrix().then((distanceMatrix) => {
+            mapControls.updateMap();
             calculateTripSteps(distanceMatrix);
             itinerary.calculateTotalLocationTime();
             updateModal();

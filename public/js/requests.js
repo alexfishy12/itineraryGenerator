@@ -52,7 +52,7 @@ function requestDistanceMatrix()
                         var to = destinations[j];
                         element.from = from;
                         element.to = to;
-                        console.log(element);
+                        //console.log(element);
                         distanceMatrix.push(element);
                     }
                 }
@@ -66,61 +66,58 @@ function requestDistanceMatrix()
     })
 }
 
-function saveItineraryToDatabase(itinerary, unique_code)
-{
-    console.log("Saving to database...");
-    var place_id_array = new Array();
-    var address_array = new Array();
+// function saveItineraryToDatabase(itinerary, unique_code)
+// {
+//     console.log("Saving to database...");
+//     var place_id_array = new Array();
+//     var address_array = new Array();
 
-    itinerary.forEach(function(place){
-        place_id_array.push(place.place_id);
-        address_array.push(place.formatted_address)
-    })
-    console.log(place_id_array);
-    var place_id_JsonString = JSON.stringify(place_id_array);
-    var address_array_JsonString = JSON.stringify(address_array);
+//     itinerary.forEach(function(place){
+//         place_id_array.push(place.place_id);
+//         address_array.push(place.formatted_address)
+//     })
+//     console.log(place_id_array);
+//     var place_id_JsonString = JSON.stringify(place_id_array);
+//     var address_array_JsonString = JSON.stringify(address_array);
 
-    $.ajax({
-        url: "/codeGeneration/saveToDatabase",
-        method: "PUT",
-        dataType: "text",
-        data: {
-            itinerary: place_id_JsonString,
-            addresses: address_array_JsonString,
-            unique_code: unique_code
-        },
-        success: (res) => {
-            console.log("Successfully saved to database.");
-            $("#generateCodeButton").attr("disabled", "disabled");
-            sendEmail(unique_code);
-            // $("#generateCodeButton").hide();
-            console.log(res);
-        },
-        error: (error) => {
-            console.log("Saving error.");
-            console.log(error);
-        },
-        complete: function(data) {
-            console.log("Saved to database.")
-        }
-    })
-}
+//     $.ajax({
+//         url: "/codeGeneration/saveToDatabase",
+//         method: "PUT",
+//         dataType: "text",
+//         data: {
+//             itinerary: place_id_JsonString,
+//             addresses: address_array_JsonString,
+//             unique_code: unique_code
+//         },
+//         success: (res) => {
+//             console.log("Successfully saved to database.");
+//             $("#generateCodeButton").attr("disabled", "disabled");
+//             sendEmail(unique_code);
+//             // $("#generateCodeButton").hide();
+//             console.log(res);
+//         },
+//         error: (error) => {
+//             console.log("Saving error.");
+//             console.log(error);
+//         },
+//         complete: function(data) {
+//             console.log("Saved to database.")
+//         }
+//     })
+// }
 
 function generateUniqueCode()
 {
     console.log("Generating unique code...");
     $.ajax({
         url: "/codeGeneration",
-        method: "POST",
-        data: {
-            itinerary: oldItinerary
-        },
+        method: "GET",
         success: (res) => {
             console.log("Successfully generated code.");
             console.log("Generated code: " + res.unique_code);
             $("#generatedCode").html("This itinerary's unique code is: <b>" + res.unique_code + "</b><br>Input this code upon returning to this website to regenerate this itinerary!<br>(Feel free to send the code to your travel buddies!)<br>");
             $("#generatedCode").show();
-            saveItineraryToDatabase(oldItinerary, res.unique_code);
+            saveItineraryToDatabase(res.unique_code);
         },
         error: (error, response, textStatus) => {
             console.log("error");
@@ -131,13 +128,22 @@ function generateUniqueCode()
 
 function saveItineraryToDatabase(unique_code)
 {
+    var itineraryToSave = JSON.stringify({
+        loaded: itinerary.loaded,
+        loadedFromDatabase: true,
+        origin: itinerary.origin,
+        destination: itinerary.destination,
+        locations: itinerary.locations,
+        unique_code: itinerary.unique_code,
+        tripData: itinerary.tripData
+    });
     console.log("Saving to database...");
     $.ajax({
         url: "/codeGeneration/saveToDatabase",
-        method: "PUT",
+        method: "POST",
         dataType: "text",
         data: {
-            itinerary: JSON.stringify(itinerary),
+            itinerary: itineraryToSave,
             unique_code: unique_code
         },
         success: (res) => {
@@ -145,14 +151,11 @@ function saveItineraryToDatabase(unique_code)
             $("#generateCodeButton").attr("disabled", "disabled");
             sendEmail(unique_code);
             // $("#generateCodeButton").hide();
-            console.log(res);
+            //console.log(res);
         },
         error: (error) => {
             console.log("Saving error.");
             console.log(error);
-        },
-        complete: function(data) {
-            console.log("Saved to database.")
         }
     })
 }
@@ -198,13 +201,53 @@ function requestItineraryFromDatabase(unique_code)
     });
 }
 
+function searchPlaces(location, type)
+{
+    return new Promise((resolve, reject) => {
+        const LOCATION = JSON.stringify(location);
+        const TYPE = JSON.stringify(type);
+        $.ajax({
+            url: "/location",
+            method: "POST",
+            data: {
+                location: LOCATION,
+                //radius: inputRadius,
+                type: TYPE
+            },
+            success: (res)=>{
+                resolve(res.mapParr);
+            },
+            error: (err)=>{
+                console.log(err);
+                reject(err);
+            }
+        })
+    })
+}
+
+function getCategories() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: "/categories",
+            method: "GET",
+            success: (res) => {
+                resolve(res);
+            },
+            error: (error) => {
+                console.log(error);
+                reject(error);
+            }
+        })
+    });
+}
+
 function sendEmail(unique_code)
 {
     console.log("sendEmail function executing...");
     var message = `
         Greetings! <br><br>
         Congratulations on creating an itinerary! Enter the unique code below on the 
-        <a href="https://www.itinerary-generator.herokuapp.com">itinerary generator website</a> 
+        <a href="https://www.itinerary-generator.herokuapp.com">Itinerary Generator website</a> 
         to regenerate the itinerary you just saved!
         <br><br>
         Your itinerary's unique code: <strong> ` + unique_code + ` </strong>
