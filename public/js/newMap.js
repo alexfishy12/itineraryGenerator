@@ -62,7 +62,8 @@ function initMap()
         zoom: 16,
         mapTypeId: "roadmap",
         streetViewControl: false,  
-        mapTypeControl: false,
+        mapTypeControl: true,
+        scaleControl: true,
         styles: myStyles,
         center: itinerary.getOrigin().geometry.location
     });

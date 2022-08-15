@@ -1,3 +1,4 @@
+var allLocations;
 $(document).ready(function() {
     itinerary.loadFromSessionStorage();
     console.log("Itinerary is loaded: "+ itinerary.isLoaded());
@@ -280,8 +281,14 @@ function calculateTripSteps(distanceMatrix)
     
     console.log(distanceMatrix);
     console.log(distanceMatrix.rows.length)
+    allLocations = new Array();
+    allLocations.push(itinerary.getOrigin());
+    itinerary.locations.forEach(location => {
+        allLocations.push(location);
+    });
+    allLocations.push(itinerary.getDestination());
+    
     //turn response matrix into usable trip steps
-
     if (itinerary.locations.length < 1)
     {
         var trip_step = {
@@ -293,41 +300,19 @@ function calculateTripSteps(distanceMatrix)
         trip_steps.push(trip_step);
     }
     else {
-        for(var i=0; i < distanceMatrix.rows.length -1; i++)
+        for(var i=0; i < distanceMatrix.rows.length-1; i++)
         {
-            var trip_step = {};
-            if (i == 0)
-            {
-                trip_step = {
-                    origin: itinerary.getOrigin().formatted_address, 
-                    destination: itinerary.locations[i].formatted_address,
-                    distance: distanceMatrix.rows[i].elements[i+1].distance,
-                    duration: distanceMatrix.rows[i].elements[i+1].duration    
-                }
+            var trip_step = {
+                origin: allLocations[i].name, 
+                destination: allLocations[i+1].name,
+                distance: distanceMatrix.rows[i].elements[i+1].distance,
+                duration: distanceMatrix.rows[i].elements[i+1].duration
             }
-            else if (i == distanceMatrix.rows.length-2)
-            {
-                trip_step = {
-                    origin: itinerary.locations[i-1].formatted_address, 
-                    destination: itinerary.getDestination().formatted_address,
-                    distance: distanceMatrix.rows[i].elements[i+1].distance,
-                    duration: distanceMatrix.rows[i].elements[i+1].duration    
-                }
-            }
-            else
-            {
-                trip_step = {
-                    origin: itinerary.locations[i-1].formatted_address, 
-                    destination: itinerary.locations[i].formatted_address,
-                    distance: distanceMatrix.rows[i].elements[i+1].distance,
-                    duration: distanceMatrix.rows[i].elements[i+1].duration
-                }
-            }
+            trip_steps.push(trip_step);
         }
 
-        trip_steps.push(trip_step);
-        console.log(trip_steps);
     }
+    console.log(trip_steps);
     itinerary.setTripSteps(trip_steps);
     setTravelTimeandDistance(trip_steps);
 }

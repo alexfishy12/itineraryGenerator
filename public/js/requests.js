@@ -250,11 +250,11 @@ function sendEmail(unique_code)
         <a href="https://www.itinerary-generator.herokuapp.com">Itinerary Generator website</a> 
         to regenerate the itinerary you just saved!
         <br><br>
-        Your itinerary's unique code: <strong> ` + unique_code + ` </strong>
+        Your itinerary's unique code: <br><strong> ` + unique_code + ` </strong>
         <br><br>
-        Best,
+        Happy trails!
         <br>
-        Itinerary Generator team
+        The Itinerary Generator Team
     `;
     
     var recipientIsCorrect;
