@@ -192,11 +192,11 @@ const mapControls = {
 
         if (cat == "services") {
             if (iconType == "black") {
-                icon = categories.Services.find(location=> location.value === type).icon;
+                icon = categories.Services.find(location=> location.value === type).b_icon;
             }
-            else
+            else if (iconType == "search")
             {
-                icon = categories.Services.find(location=> location.value === type).searchIcon;
+                icon = categories.Services.find(location=> location.value === type).w_icon;
             }
             if (icon !== undefined)
             {
@@ -211,7 +211,14 @@ const mapControls = {
         }
         else if(cat == "travel")
         {
-            icon = categories.Travel.find(location=> location.value === type).icon;
+            if (iconType == "black") {
+                icon = categories.Travel.find(location=> location.value === type).b_icon;
+            }
+            else if (iconType == "search")
+            {
+                icon = categories.Travel.find(location=> location.value === type).w_icon;
+            }
+            
             if (icon !== undefined)
             {
                 console.log(icon);
@@ -223,7 +230,13 @@ const mapControls = {
                 return {url: "https://maps.google.com/mapfiles/kml/paddle/pink-stars.png", listType: "danger"};
             }
         }else if(cat == "entertainment"){
-            icon = categories.Entertainment.find(location=> location.value === type).icon;
+            if (iconType == "black") {
+                icon = categories.Entertainment.find(location=> location.value === type).b_icon;
+            }
+            else if (iconType == "search")
+            {
+                icon = categories.Entertainment.find(location=> location.value === type).w_icon;
+            }
             if (icon !== undefined)
             {
                 console.log(icon);
@@ -235,7 +248,13 @@ const mapControls = {
                 return {url: "https://maps.google.com/mapfiles/kml/paddle/orange-stars.png", listType: "warning"};
             }
         }else if(cat == "store"){
-            icon = categories.Store.find(location=> location.value === type).icon;
+            if (iconType == "black") {
+                icon = categories.Store.find(location=> location.value === type).b_icon;
+            }
+            else if (iconType == "search")
+            {
+                icon = categories.Store.find(location=> location.value === type).w_icon;
+            }
             if (icon !== undefined)
             {
                 console.log(icon);
@@ -247,7 +266,13 @@ const mapControls = {
                 return {url: "https://maps.google.com/mapfiles/kml/paddle/grn-stars.png", listType: "success"};
             }
         }else if(cat == "general"){
-            icon = categories.General_Shopping.find(location=> location.value === type).icon;
+            if (iconType == "black") {
+                icon = categories.General_Shopping.find(location=> location.value === type).b_icon;
+            }
+            else if (iconType == "search")
+            {
+                icon = categories.General_Shopping.find(location=> location.value === type).w_icon;
+            }
             if (icon !== undefined)
             {
                 console.log(icon);
@@ -259,7 +284,13 @@ const mapControls = {
                 return {url: "https://maps.google.com/mapfiles/kml/paddle/ltblu-stars.png", listType: "info"};
             }
         }else{
-            icon = categories.Other.find(location=> location.value === type).icon;
+            if (iconType == "black") {
+                icon = categories.Other.find(location=> location.value === type).b_icon;
+            }
+            else if (iconType == "search")
+            {
+                icon = categories.Other.find(location=> location.value === type).w_icon;
+            }
             if (icon !== undefined)
             {
                 console.log(icon);

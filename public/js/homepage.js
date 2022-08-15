@@ -35,11 +35,6 @@ $(document).ready(function() {
     })
 });
 
-function updateItinerary()
-{
-    
-}
-
 function updateModal() {
     var itineraryHTML = ``;
 
@@ -377,20 +372,27 @@ function updateTimeWarning()
     const desiredTime = itinerary.getDesiredTime();
     const tripTime = itinerary.getTotalTime();
 
+    const totalTime = Math.abs(desiredTime - tripTime);
+    const totalHours = Math.floor(totalTime / 60);
+    const totalMinutes = totalTime % 60;
+
     if(desiredTime - tripTime < 0)
     {
         $("#timeWarning").attr("class", "badge bg-danger text-white");
-        $("#timeWarning").text("Over your desired time by " + tripTime - desiredTime + " minutes!");
+        if (totalHours > 0)
+            $("#timeWarning").text(`Over your desired trip time by ${totalHours} hours and ${totalMinutes} minutes!`);
+        else
+            $("#timeWarning").text(`Over your desired trip time by ${totalMinutes} minutes!`);
     }
     else if (desiredTime - tripTime < 60)
     {
         $("#timeWarning").attr("class", "badge bg-warning text-black");
-        $("#timeWarning").text("Less than one hour remaining!");
+        $("#timeWarning").text("Only " + (desiredTime - tripTime) + " minutes left to budget!");
     }
     else
     {
         $("#timeWarning").attr("class", "badge bg-success text-white");
-        $("#timeWarning").text((desiredTime - tripTime) + " minutes left to budget");
+        $("#timeWarning").text(`${totalHours} hours and ${totalMinutes} minutes left to budget.`);
     }
 }
 
@@ -427,6 +429,8 @@ function sendEmail(unique_code)
         <br><br>
         Your itinerary's unique code: <strong> ` + unique_code + ` </strong>
         <br><br>
+        Follow the link below to get to our website!
+        <a href="https://itinerary-generator.herokuapp.com" target="_blank">https://itinerary-generator.herokuapp.com</a>
         Best,
         <br>
         Itinerary Generator team
@@ -466,7 +470,7 @@ function sendEmail(unique_code)
         }
         else
         {
-            alert("Email will not be sent. Please save code in a safe place to regenerate this itinerary.");
+            alert("Email will not be sent. Please save code in a safe place in order to retrieve this itinerary later.");
         }
     }
     askForEmail();

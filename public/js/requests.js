@@ -66,45 +66,45 @@ function requestDistanceMatrix()
     })
 }
 
-function saveItineraryToDatabase(itinerary, unique_code)
-{
-    console.log("Saving to database...");
-    var place_id_array = new Array();
-    var address_array = new Array();
+// function saveItineraryToDatabase(itinerary, unique_code)
+// {
+//     console.log("Saving to database...");
+//     var place_id_array = new Array();
+//     var address_array = new Array();
 
-    itinerary.forEach(function(place){
-        place_id_array.push(place.place_id);
-        address_array.push(place.formatted_address)
-    })
-    console.log(place_id_array);
-    var place_id_JsonString = JSON.stringify(place_id_array);
-    var address_array_JsonString = JSON.stringify(address_array);
+//     itinerary.forEach(function(place){
+//         place_id_array.push(place.place_id);
+//         address_array.push(place.formatted_address)
+//     })
+//     console.log(place_id_array);
+//     var place_id_JsonString = JSON.stringify(place_id_array);
+//     var address_array_JsonString = JSON.stringify(address_array);
 
-    $.ajax({
-        url: "/codeGeneration/saveToDatabase",
-        method: "PUT",
-        dataType: "text",
-        data: {
-            itinerary: place_id_JsonString,
-            addresses: address_array_JsonString,
-            unique_code: unique_code
-        },
-        success: (res) => {
-            console.log("Successfully saved to database.");
-            $("#generateCodeButton").attr("disabled", "disabled");
-            sendEmail(unique_code);
-            // $("#generateCodeButton").hide();
-            console.log(res);
-        },
-        error: (error) => {
-            console.log("Saving error.");
-            console.log(error);
-        },
-        complete: function(data) {
-            console.log("Saved to database.")
-        }
-    })
-}
+//     $.ajax({
+//         url: "/codeGeneration/saveToDatabase",
+//         method: "PUT",
+//         dataType: "text",
+//         data: {
+//             itinerary: place_id_JsonString,
+//             addresses: address_array_JsonString,
+//             unique_code: unique_code
+//         },
+//         success: (res) => {
+//             console.log("Successfully saved to database.");
+//             $("#generateCodeButton").attr("disabled", "disabled");
+//             sendEmail(unique_code);
+//             // $("#generateCodeButton").hide();
+//             console.log(res);
+//         },
+//         error: (error) => {
+//             console.log("Saving error.");
+//             console.log(error);
+//         },
+//         complete: function(data) {
+//             console.log("Saved to database.")
+//         }
+//     })
+// }
 
 function generateUniqueCode()
 {
@@ -130,7 +130,7 @@ function saveItineraryToDatabase(unique_code)
 {
     var itineraryToSave = JSON.stringify({
         loaded: itinerary.loaded,
-        loadedFromDatabase: itinerary.loadedFromDatabase,
+        loadedFromDatabase: true,
         origin: itinerary.origin,
         destination: itinerary.destination,
         locations: itinerary.locations,
