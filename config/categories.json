@@ -58,213 +58,314 @@
         },
         {
             "name": "Car Dealer",
-            "value": "car_dealer"
+            "value": "car_dealer",
+            "b_icon": "b_car.png",
+            "w_icon": "w_car.png"
         },
         {
             "name": "Car Rental",
-            "value": "car_rental"
+            "value": "car_rental",
+            "b_icon": "b_car.png",
+            "w_icon": "w_car.png"
         },
         {
             "name": "Parking",
-            "value": "parking"
+            "value": "parking",
+            "b_icon": "b_parking.png",
+            "w_icon": "w_parking.png"
         },
         {
             "name": "Train Station",
-            "value": "subway_station,train_station,transit_station"
+            "value": "subway_station,train_station,transit_station",
+            "b_icon": "b_train.png",
+            "w_icon": "w_train.png"
         }
     ]
     ,
     "Entertainment":[
         {
             "name": "Amusement Park",
-            "value": "amusement_park"
+            "value": "amusement_park",
+            "b_icon": "b_attractions.png",
+            "w_icon": "w_attractions.png"
         },
         {
             "name": "Aquarium",
-            "value": "aquarium"
+            "value": "aquarium",
+            "b_icon": "b_fish.png",
+            "w_icon": "w_fish.png"
         },
         {
             "name": "Art Gallery",
-            "value": "art_gallery"
+            "value": "art_gallery",
+            "b_icon": "b_picture.png",
+            "w_icon": "w_picture.png"
         },
         {
             "name": "Bowling Alley",
-            "value": "bowling_alley"
+            "value": "bowling_alley",
+            "b_icon": "b_bowling.png",
+            "w_icon": "w_bowling.png"
         },
         {
             "name": "Movie Theater",
-            "value": "movie_theater"
+            "value": "movie_theater",
+            "b_icon": "b_theaters.png",
+            "w_icon": "w_theaters.png"
         },
         {
             "name": "Museum",
-            "value": "museum"
+            "value": "museum",
+            "b_icon": "b_museum.png",
+            "w_icon": "w_museum.png"
         },
         {
             "name": "Night Club",
-            "value": "night_club"
+            "value": "night_club",
+            "b_icon": "b_nightclub.png",
+            "w_icon": "w_nightclub.png"
         },
         {
             "name": "Park",
-            "value": "park"
+            "value": "park",
+            "b_icon": "b_park.png",
+            "w_icon": "w_park.png"
         },
         {
             "name": "Stadium",
-            "value": "stadium"
+            "value": "stadium",
+            "b_icon": "b_stadium.png",
+            "w_icon": "w_stadium.png"
         },
         {
             "name": "Tourist Attraction",
-            "value": "tourist_attraction"
+            "value": "tourist_attraction",
+            "b_icon": "b_touristSpot.png",
+            "w_icon": "w_touristSpot.png"
         },
         {
             "name": "Zoo",
-            "value": "zoo"
+            "value": "zoo",
+            "b_icon": "b_paw.png",
+            "w_icon": "w_paw.png"
         }
     ],
     "Store":[
         {
             "name": "Bakery",
-            "value": "bakery"
+            "value": "bakery",
+            "b_icon": "b_bakery.png",
+            "w_icon": "w_bakery.png"
         },
         {
             "name": "Bar",
-            "value": "bar"
+            "value": "bar",
+            "b_icon": "b_bar.png",
+            "w_icon": "w_bar.png"
         },
         {
             "name": "Cafe",
-            "value": "cafe"
+            "value": "cafe",
+            "b_icon": "b_cafe.png",
+            "w_icon": "w_cafe.png"
         },
         {
             "name": "Liquor Store",
-            "value": "liquor_store"
+            "value": "liquor_store",
+            "b_icon": "b_liquor.png",
+            "w_icon": "w_liquor.png"
         },
         {
             "name": "Meal Takeaway",
-            "value": "meal_takeaway"
+            "value": "meal_takeaway",
+            "b_icon": "b_fastFood.png",
+            "w_icon": "w_fastFood.png"
         }
         ,
         {
             "name": "Restaurant",
-            "value": "restaurant"
+            "value": "restaurant",
+            "b_icon": "b_restaurant.png",
+            "w_icon": "w_restaurant.png"
         }
     ],
     "General_Shopping":[
         {
             "name": "Bicycle Store",
-            "value": "bicycle_store"
+            "value": "bicycle_store",
+            "b_icon": "b_bike.png",
+            "w_icon": "w_bike.png"
         },
         {
             "name": "Bookstore",
-            "value": "book_store"
+            "value": "book_store",
+            "b_icon": "b_book.png",
+            "w_icon": "w_book.png"
         },
         {
             "name": "Clothing Store",
-            "value": "clothing_store"
+            "value": "clothing_store",
+            "b_icon": "b_hanger.png",
+            "w_icon": "w_hanger.png"
         },
         {
             "name": "Convenience Store",
-            "value": "convenience_store"
+            "value": "convenience_store",
+            "b_icon": "b_convenienceStore.png",
+            "w_icon": "w_convenienceStore.png"
         },
         {
             "name": "Department Store",
-            "value": "department_store"
+            "value": "department_store",
+            "b_icon": "b_mall.png",
+            "w_icon": "w_mall.png"
         },
         {
             "name": "Drugstore",
-            "value": "drugstore"
+            "value": "drugstore",
+            "b_icon": "b_drugstore.png",
+            "w_icon": "w_drugstore.png"
         },
         {
             "name": "Electronics Store",
-            "value": "electronics_store"
+            "value": "electronics_store",
+            "b_icon": "b_electronics.png",
+            "w_icon": "w_electronics.png"
         },
         {
             "name": "Florist",
-            "value": "florist"
+            "value": "florist",
+            "b_icon": "b_florist.png",
+            "w_icon": "w_florist.png"
         },
         {
             "name": "Hardware Store",
-            "value": "hardware_store"
+            "value": "hardware_store",
+            "b_icon": "b_hardware.png",
+            "w_icon": "w_hardware.png"
         },
         {
             "name": "Home Goods Store",
-            "value": "home_goods_store"
+            "value": "home_goods_store",
+            "b_icon": "b_couch.png",
+            "w_icon": "w_couch.png"
         },
         {
             "name": "Jewelry Store",
-            "value": "jewelry_store"
+            "value": "jewelry_store",
+            "b_icon": "b_jewelry.png",
+            "w_icon": "w_jewelry.png"
         },
         {
             "name": "Pet Store",
-            "value": "pet_store"
+            "value": "pet_store",
+            "b_icon": "b_paw.png",
+            "w_icon": "w_paw.png"
         },
         {
             "name": "Pharmacy",
-            "value": "pharmacy"
+            "value": "pharmacy",
+            "b_icon": "b_pharmacy.png",
+            "w_icon": "w_pharmacy.png"
         },
         {
             "name": "Shoe Store",
-            "value": "shoe_store"
+            "value": "shoe_store",
+            "b_icon": "b_shoe.png",
+            "w_icon": "w_shoe.png"
         },
         {
             "name": "Shopping mall",
-            "value": "shopping_mall"
+            "value": "shopping_mall",
+            "b_icon": "b_mall.png",
+            "w_icon": "w_mall.png"
         },
         {
             "name": "Store",
-            "value": "store"
+            "value": "store",
+            "b_icon": "b_store.png",
+            "w_icon": "w_store.png"
         }
     ],
     "Other":[
         {
             "name": "Fire Station",
-            "value": "fire_station"
+            "value": "fire_station",
+            "b_icon": "b_firetruck.png",
+            "w_icon": "w_firetruck.png"
         },
         {
             "name": "Hospital",
-            "value": "police"
+            "value": "hospital",
+            "b_icon": "b_hospital.png",
+            "w_icon": "w_hospital.png"
         },
         {
             "name": "Police",
-            "value": "hospital"
+            "value": "police",
+            "b_icon": "b_police.png",
+            "w_icon": "w_police.png"
         },
         {
             "name": "Post Office",
-            "value": "post_office"
+            "value": "post_office",
+            "b_icon": "b_postOffice.png",
+            "w_icon": "w_postOffice.png"
         },
         {
             "name": "Primary School",
-            "value": "primary_school"
+            "value": "primary_school",
+            "b_icon": "b_school.png",
+            "w_icon": "w_school.png"
         },
         {
             "name": "School",
-            "value": "school"
+            "value": "school",
+            "b_icon": "b_school.png",
+            "w_icon": "w_school.png"
         },
         {
             "name": "Secondary School",
-            "value": "secondary_school"
+            "value": "secondary_school",
+            "b_icon": "b_school.png",
+            "w_icon": "w_school.png"
         },
         {
             "name": "University",
-            "value": "university"
+            "value": "university",
+            "b_icon": "b_university.png",
+            "w_icon": "w_university.png"
+            
         },
         {
             "name": "Church",
-            "value": "church"
+            "value": "church",
+            "b_icon": "b_church.png",
+            "w_icon": "w_church.png"
         },
         {
             "name": "Funeral Home",
-            "value": "funeral_home"
+            "value": "funeral_home",
+            "b_icon": "b_coffin.png",
+            "w_icon": "w_coffin.png"
         },
         {
             "name": "Hindu Temple",
-            "value": "hindu_temple"
+            "value": "hindu_temple",
+            "b_icon": "b_templeHindu.png",
+            "w_icon": "w_templeHindu.png"
         },
         {
             "name": "Mosque",
-            "value": "mosque"
+            "value": "mosque",
+            "b_icon": "b_mosque.png",
+            "w_icon": "w_mosque.png"
         },
         {
             "name": "Synagogue",
-            "value": "synagogue"
+            "value": "synagogue",
+            "b_icon": "b_synagogue.png",
+            "w_icon": "w_synagogue.png"
         }
     ]
 }

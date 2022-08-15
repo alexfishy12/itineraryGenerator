@@ -236,8 +236,8 @@
             </div>
             <hr>
             <div class="overflow-auto" style="max-height: 50vh;" id="results_div">
-              <ul class="list-group" style="width: 100%;">
-                <li class="list-group-item list-group-item-info" style="width: 100%; height: 100%;">
+              <ul class="list-group" style="width: 100%; display:flex;">
+                <li class="list-group-item list-group-item-info" style="align-items: stretch;">
                   <b>Instructions:</b><br><br>
                   <b>1.</b> Select point of interest categories using the dropdown menus above, then click search.<br><br>
                   <b>2.</b> Add locations to your itinerary by clicking the button on the map marker popups or in the list that appears here.<br><br>
@@ -259,10 +259,18 @@
                           </div>
                           <div class="row">
                             <div class="col">
-                              <img src="http://maps.google.com/mapfiles/kml/pal4/icon47.png" alt="Trulli" width="48" height="48">
+                              <img src="../icons/star.png" alt="Star" width="40" height="40">
                             </div>
                             <div class="col d-flex align-items-center">
-                              <p>Selected Location</p>
+                              <p>Origin</p>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <img src="../icons/flag.png" alt="Flag" width="48" height="48">
+                            </div>
+                            <div class="col d-flex align-items-center">
+                              <p>Destination</p>
                             </div>
                           </div>
                           <div class="row">
