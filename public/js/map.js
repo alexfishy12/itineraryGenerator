@@ -31,6 +31,7 @@ function initAutocomplete() {
         mapTypeId: "roadmap",
         streetViewControl: false,  
         mapTypeControl: false,
+        scaleControl: true,
         styles: myStyles
     });
 

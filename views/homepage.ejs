@@ -8,6 +8,7 @@
   <script src="/js/lib/jQuery-3.4.1.js"></script>
   <script src="/js/lib/bootstrap.min.js"></script>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBj-qnkdxbjjZIlQ9mM4x4bR7L_bXXpDeU&libraries=places&v=weekly" defer></script>
   <script src="/js/requests.js"></script>
   <script src="/js/itinerary.js"></script>
@@ -352,21 +353,23 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalLabel">Your Trip Itinerary</h5>
-                    <div><b>Trip Info</b><br>
-                      <div class="" id='numLocations'>You haven't added any locations yet!</div>
-                      <span id='estTotalTime'></span><span> | </span><span id="timeWarning" class="badge bg-danger"></span>
-                      <div id='estTravelTime'></div><span id="estDistance"></span>
-                    </div>
+                  </div>
+                <div class="modal-body" id="itineraryBody">
+                  <div><b>Trip Info</b><br>
+                    <div class="" id='numLocations'>You haven't added any locations yet!</div>
+                    <span id='estTotalTime'></span>&nbsp; &nbsp;<span id="timeWarning" class="badge bg-danger"></span>
+                    <div id='estTravelTime'></div><span id="estDistance"></span>
+                  </div>
                 </div>
-                <div class="modal-body" id="itineraryBody" style="overflow-y:scroll">
-                    <div class="list-group" id="itineraryList">
+                <div class="modal-body" style="overflow-y:scroll">
+                  <div class="list-group" id="itineraryList">
                       
                     </div>
                 </div>
                 <div class="modal-footer">
                     <div id="generatedCode" class="mr-auto"></div>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="generateUniqueCode()" id="generateCodeButton">Save</button>
+                    <button type="button" class="btn btn-primary" onclick="saveItinerary()" id="generateCodeButton">Save</button>
                 </div>
             </div>
         </div>

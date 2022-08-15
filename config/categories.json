@@ -2,11 +2,15 @@
     "Services":[
         {
             "name": "Bank",
-            "value": "bank"
+            "value": "bank",
+            "b_icon": "b_bank.png",
+            "w_icon": "w_bank.png"
         },
         {
             "name": "Beauty Salon",
-            "value": "beauty_salon"
+            "value": "beauty_salon",
+            "b_icon": "b_beautysalon",
+            "w_icon": "w_beautysalon"
         },
         {
             "name": "Gym",

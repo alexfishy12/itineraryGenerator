@@ -3,11 +3,7 @@ var express = require('express');
 const Itinerary = require('../model/itineraries');
 var router = express.Router();
 
-router.post("/", async(req,res)=>{
-
-    //get post variables
-    var itinerary = req.body.itinerary;
-
+router.get("/", async(req,res)=>{
     console.log("testtesttest");
     try{        
         var unique_code = uuid.v1();
@@ -22,7 +18,7 @@ router.post("/", async(req,res)=>{
     }
 });
 
-router.put("/saveToDatabase", async (req, res) => {
+router.post("/saveToDatabase", async (req, res) => {
     var unique_code = req.body.unique_code;
     var itinerary = req.body.itinerary;
     
@@ -42,25 +38,35 @@ router.put("/saveToDatabase", async (req, res) => {
                 error: "Code already exists"
             });
         }
+        else
+        {
+            itineraryToSave = new Itinerary({
+                itinerary: itinerary,
+                uuid: unique_code
+            });
+    
+            itineraryToSave.save(function(err, result){
+                if (err){
+                    console.log(err);
+                    console.log("FAILURE WHILE SAVING.");
+                    res.status(500);
+                    return res.send({
+                        error
+                    });
+                }
+                else{
+                    console.log("SUCCESSFUL SAVE.");
+                    res.status(200);
+                    return res.send({
+                        result
+                    })
+                }
+            });
+        }
 
-        itineraryToSave = new Itinerary({
-            itinerary: itinerary,
-            uuid: unique_code
-        });
-
-        itineraryToSave.save(function(err){
-            if(err){
-                console.log(err);
-                res.json({
-                    error: err
-                });
-            }
-            else {
-                res.send("Success.");
-            }
-        });
     } catch (err){
         console.log(err.message);
+        console.log("ERROR SAVING");
         res.status(500);
         res.send("Internal Error");
     }
