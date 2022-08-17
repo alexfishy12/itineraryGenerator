@@ -56,14 +56,9 @@
   background-color: lightgray;
   }
 
-  .bodyNav { 
-  padding-top: 0px;
-  background-color: #bbaaaa;
-  }
-
   .navbar {
     margin-bottom: 0px;
-    height: 8vh;
+    height: 6vh;
   }
   /* Homepage "Change color schema after decesion is made"
   ========================================= */
@@ -73,8 +68,8 @@
 #map {
   height: 100%;
   width: 100%;
-  border: 1px solid black;
-
+  position:absolute;
+  top:0%;
 }
 
 /* Optional: Makes the sample page fill the window. */
@@ -156,26 +151,36 @@ body {
   width: 345px;
 }
 
-.container-map{
-  width: 98vw;
-}
-
-.containermap{
-  margin-top: 70px;
-}
-
-  #HM{
+  #contents{
+    position:relative;
     padding: 0;
     margin: 0;
     /* border: 1px solid black; */
-    height: 85vh;
-    max-height:85vh;
+    height: 94vh;
+    display:flex;
+    justify-content: center;
   }
 
-  #HC{
-    margin-left: 0px;
-    height: 85vh;
-    max-height:85vh;
+  
+  #searchControls{ /* map controls overlay */
+    margin-top: 10px;
+    background:rgb(255, 255, 255);
+    height: 15vh;
+    width: 50vw;
+  }
+
+  #results_div{
+      /*positioning */
+      position:absolute;
+      left: 10px;
+      bottom: 10px;
+
+      /*size, shape, color */
+      border: 2px solid black;
+      height: fit-content;
+      max-height: 50%;
+      width:25vw;
+      padding:0px;
   }
 
   input[type=text-search] {
@@ -214,12 +219,7 @@ body {
       position:absolute;
       bottom:10;
       width: 100%;
-      max-width: 97%}
-
-    #results_div{
-      border: 2px solid black;
-      border-radius: 10px;     
-      height: 63%;
+      max-width: 97%
     }
 
     .name{

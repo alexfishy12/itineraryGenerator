@@ -262,7 +262,7 @@ function addToItinerary(place) {
         mapControls.calculateRoute();
         mapControls.showRoute();
         itinerary.update();
-        $("#results_div").html("");
+        $("#results_div").hide();
     });
 }
 

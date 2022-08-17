@@ -14,7 +14,7 @@ let googleLocation;
 $(document).ready(function () {
     getCategories().then((response) => {
         mapControls.setCategories(response.categories);
-        initMap();
+        mapControls.initMap();
     })
     .catch((error) => {
         console.log(error);
@@ -40,43 +40,6 @@ $(document).ready(function () {
 
 
 })
-
-function initMap() 
-{
-    mapControls.directionsService = new google.maps.DirectionsService();
-    mapControls.directionsRenderer = new google.maps.DirectionsRenderer({map: map, suppressMarkers: true});
-    mapControls.infoWindow = new google.maps.InfoWindow();    
-    // Removes all default markers
-    var myStyles =[
-        {
-            featureType: "poi",
-            elementType: "labels",
-            stylers: [
-                  { visibility: "off" }
-            ]
-        }
-    ];
-
-     map = new google.maps.Map(document.getElementById("map"), {
-    //   center: { lat: 40.6788, lng: -74.2324 },
-        zoom: 16,
-        mapTypeId: "roadmap",
-        streetViewControl: false,  
-        mapTypeControl: true,
-        scaleControl: true,
-        styles: myStyles,
-        center: itinerary.getOrigin().geometry.location
-    });
-    
-    mapControls.addOriginMarker();
-    mapControls.addDestinationMarker();
-    itinerary.locations.forEach(location => {
-        mapControls.addItineraryMarker(location);
-    })
-
-    mapControls.calculateRoute();
-    mapControls.showRoute();
-}
 
 function inputType(type, category){
     var elem = document.getElementById(type);
@@ -190,6 +153,7 @@ function getLocationsv2(category, type) {
 
             resultHTML += '</li></ul>';
             resultDiv.innerHTML = resultHTML;
+            $("#results_div").show();
 
             PLACES.forEach(place => {
                 var addedItem = itinerary.locations.findIndex(location => location.place_id === place.place_id);

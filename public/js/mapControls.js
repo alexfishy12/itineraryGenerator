@@ -7,6 +7,42 @@ const mapControls = {
     selectedLocation: null,
     itineraryMarkers: [],
     searchMarkers: [],
+    initMap: function () 
+    {
+        this.directionsService = new google.maps.DirectionsService();
+        this.directionsRenderer = new google.maps.DirectionsRenderer({map: map, suppressMarkers: true});
+        this.infoWindow = new google.maps.InfoWindow();    
+        // Removes all default markers
+        var myStyles =[
+            {
+                featureType: "poi",
+                elementType: "labels",
+                stylers: [
+                    { visibility: "off" }
+                ]
+            }
+        ];
+
+        map = new google.maps.Map(document.getElementById("map"), {
+        //   center: { lat: 40.6788, lng: -74.2324 },
+            zoom: 16,
+            mapTypeId: "roadmap",
+            streetViewControl: false,  
+            mapTypeControl: true,
+            scaleControl: true,
+            styles: myStyles,
+            center: itinerary.getOrigin().geometry.location
+        });
+        
+        this.addOriginMarker();
+        this.addDestinationMarker();
+        itinerary.locations.forEach(location => {
+            mapControls.addItineraryMarker(location);
+        })
+
+        this.calculateRoute();
+        this.showRoute();
+    },
     setSelectedLocation: function (place) {
         this.selectedLocation = place;
     },
