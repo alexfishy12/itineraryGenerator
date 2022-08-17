@@ -77,16 +77,14 @@
   })
 </script>
 
-<body class="bodyNav bg-white">
-  <div class="container-fluid">
-  <div class="row">
-    <div id ="HM" class="col col-lg-4">
-      <div id="HC" class="card" style="max-height:100%">
+<body>
+  <div class="row" id="contents">
+      <div id="map"></div>
+      <div id="searchControls" class="card">
         <div class="card-body">
-            <div class="row" id="text-search-div-page2">
+            <div class="row" id="text-search-div-page2" style="display:none">
               <input id="pac-input" class="form-control" type="text-search" placeholder="Search"/>
             </div>
-            <hr></hr>
             <div class="row">
               <div class="container text-center">
                 <div id="dropdownFilters" class="row">
@@ -234,17 +232,6 @@
                 <div id="timeLeft" class="font-weight-bold"></div>
               </div>
             </div>
-            <hr>
-            <div class="overflow-auto" style="max-height: 50vh;" id="results_div">
-              <ul class="list-group" style="width: 100%; display:flex;">
-                <li class="list-group-item list-group-item-info" style="align-items: stretch;">
-                  <b>Instructions:</b><br><br>
-                  <b>1.</b> Select point of interest categories using the dropdown menus above, then click search.<br><br>
-                  <b>2.</b> Add locations to your itinerary by clicking the button on the map marker popups or in the list that appears here.<br><br>
-                  <b>3.</b> Click the "See Itinerary" button to customize your stay at each added location and to save your trip for sharing and later retrieval!
-                </li>
-              </ul>
-            </div>
             <div class="row absolute-bottom">
               <div class="col">
                 <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target=".bd-example-modal-sm">Map Key</button>
@@ -266,6 +253,9 @@
                             </div>
                           </div>
                           <div class="row">
+                            <!-- spacer --><br>
+                          </div>
+                          <div class="row">
                             <div class="col">
                               <img src="../icons/flag.png" alt="Flag" width="48" height="48">
                             </div>
@@ -276,71 +266,7 @@
                           <div class="row">
                             <!-- spacer --><br>
                           </div>
-                          <div class="row">
-                            <div class="col">
-                              <img src="https://maps.google.com/mapfiles/kml/paddle/blu-stars.png" alt="Trulli" width="48" height="48">
-                            </div>
-                            <div class="col d-flex align-items-center">
-                              <p>Services</p>
-                            </div>
                           </div>
-                          <div class="row">
-                            <!-- spacer --><br>
-                          </div>
-                          <div class="row">
-                            <div class="col">
-                              <img src="https://maps.google.com/mapfiles/kml/paddle/pink-stars.png" alt="Trulli" width="48" height="48">
-                            </div>
-                            <div class="col d-flex align-items-center">
-                              <p>Travel</p>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <!-- spacer --><br>
-                          </div>
-                          <div class="row">
-                            <div class="col">
-                              <img src="https://maps.google.com/mapfiles/kml/paddle/orange-stars.png" alt="Trulli" width="48" height="48">
-                            </div>
-                            <div class="col d-flex align-items-center">
-                              <p>Entertainment</p>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <!-- spacer --><br>
-                          </div>
-                          <div class="row">
-                            <div class="col">
-                              <img src="https://maps.google.com/mapfiles/kml/paddle/grn-stars.png" alt="Trulli" width="48" height="48">
-                            </div>
-                            <div class="col d-flex align-items-center">
-                              <p>Store</p>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <!-- spacer --><br>
-                          </div>
-                          <div class="row">
-                            <div class="col">
-                              <img src="https://maps.google.com/mapfiles/kml/paddle/ltblu-stars.png" alt="Trulli" width="48" height="48">
-                            </div>
-                            <div class="col d-flex align-items-center">
-                              <p>General</p>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <!-- spacer --><br>
-                          </div>
-                          <div class="row">
-                            <div class="col">
-                              <img src="https://maps.google.com/mapfiles/kml/paddle/wht-stars.png" alt="Trulli" width="48" height="48">
-                            </div>
-                            <div class="col d-flex align-items-center">
-                              <p>Other</p>
-                            </div>
-                          </div>
-                        </div>
-                        
                       </div>
                     </div>
                   </div>
@@ -350,38 +276,43 @@
               </div>
               </div>
             </div>
-        </div>
       </div>
-      <div id ="HM" class="col">
-        <div id="map"></div>
+      <div class="overflow-auto" id="results_div">
+        <ul class="list-group" style="width:100%;">
+          <li class="list-group-item list-group-item-info">
+            <b>Instructions:</b><br><br>
+            <b>1.</b> Select point of interest categories using the dropdown menus above, then click search.<br><br>
+            <b>2.</b> Add locations to your itinerary by clicking the button on the map marker popups or in the list that appears here.<br><br>
+            <b>3.</b> Click the "See Itinerary" button to customize your stay at each added location and to save your trip for sharing and later retrieval!
+          </li>
+        </ul>
       </div>
-      <div class="modal modal-xl fade" id="itineraryModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Your Trip Itinerary</h5>
+      
+    <div class="modal modal-xl fade" id="itineraryModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="modalLabel">Your Trip Itinerary</h5>
+                </div>
+              <div class="modal-body" id="itineraryBody">
+                <div><b>Trip Info</b><br>
+                  <div class="" id='numLocations'>You haven't added any locations yet!</div>
+                  <span id='estTotalTime'></span>&nbsp; &nbsp;<span id="timeWarning" class="badge bg-danger"></span>
+                  <div id='estTravelTime'></div><span id="estDistance"></span>
+                </div>
+              </div>
+              <div class="modal-body" style="overflow-y:scroll">
+                <div class="list-group" id="itineraryList">
+                    
                   </div>
-                <div class="modal-body" id="itineraryBody">
-                  <div><b>Trip Info</b><br>
-                    <div class="" id='numLocations'>You haven't added any locations yet!</div>
-                    <span id='estTotalTime'></span>&nbsp; &nbsp;<span id="timeWarning" class="badge bg-danger"></span>
-                    <div id='estTravelTime'></div><span id="estDistance"></span>
-                  </div>
-                </div>
-                <div class="modal-body" style="overflow-y:scroll">
-                  <div class="list-group" id="itineraryList">
-                      
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div id="generatedCode" class="mr-auto"></div>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="saveItinerary()" id="generateCodeButton">Save</button>
-                </div>
-            </div>
-        </div>
+              </div>
+              <div class="modal-footer">
+                  <div id="generatedCode" class="mr-auto"></div>
+                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" onclick="saveItinerary()" id="generateCodeButton">Save</button>
+              </div>
+          </div>
       </div>
     </div>
   </div>
-</div>
 </body>
