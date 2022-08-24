@@ -165,7 +165,7 @@ body {
   #searchControls{ /* map controls overlay */
     margin-top: 10px;
     background:rgb(255, 255, 255);
-    height: 15vh;
+    height: fit-content;
     width: 50vw;
   }
 
