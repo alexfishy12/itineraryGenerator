@@ -8,7 +8,7 @@ const InitiateMongoServer = require("./dbconfig");
 const expressValidator  = require('express-validator'); //npm install express-validator@5.3.0
 var session = require('express-session');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 InitiateMongoServer.InitiateMongoServer();
 uuid.v4();
@@ -71,7 +71,7 @@ app.use(function (err, req, res, next) {
     res.render("error");
 });
 
-app.listen(process.env.PORT, ()=>{
+app.listen(port, ()=>{
     console.log(`http://localhost:${port}`);
 });
 

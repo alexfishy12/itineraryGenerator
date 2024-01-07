@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CPS-5301-Team-2/Backend.git"
+    "url": "git+https://github.com/alexfishy12/itineraryGenerator.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/CPS-5301-Team-2/Backend/issues"
+    "url": "https://github.com/alexfishy12/itineraryGenerator"
   },
-  "homepage": "https://github.com/CPS-5301-Team-2/Backend#readme",
+  "homepage": "https://github.com/alexfishy12/itineraryGenerator",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@googlemaps/js-api-loader": "^1.14.3",
