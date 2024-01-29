@@ -27,8 +27,10 @@
 - **Time Estimation**: Total itinerary duration, walking duration between locations
 
 ## Visuals
-![View Itinerary](.\public\static\itinerary.PNG "View Itinerary List")
-![View Itinerary](.\public\static\map.PNG "View Itinerary Map")
+<p float="left">
+  <img src="https://raw.githubusercontent.com/alexfishy12/itineraryGenerator/main/public/static/itinerary.PNG" width="500" />
+  <img src="https://raw.githubusercontent.com/alexfishy12/itineraryGenerator/main/public/static/map.PNG" width="500" /> 
+</p>
 
 
 ## Technologies
