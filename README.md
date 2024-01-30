@@ -28,8 +28,8 @@
 
 ## Visuals
 <p float="left">
-  <img src="https://raw.githubusercontent.com/alexfishy12/itineraryGenerator/main/public/static/itinerary.PNG" width="500" />
-  <img src="https://raw.githubusercontent.com/alexfishy12/itineraryGenerator/main/public/static/map.PNG" width="500" /> 
+  <img src="https://raw.githubusercontent.com/alexfishy12/itineraryGenerator/main/public/static/itinerary.PNG" width="100%" />
+  <img src="https://raw.githubusercontent.com/alexfishy12/itineraryGenerator/main/public/static/map.PNG" width="100%" /> 
 </p>
 
 
