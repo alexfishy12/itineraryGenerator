@@ -7,14 +7,12 @@
 2. [Features](#features)
 3. [Visuals](#visuals)
 4. [Technologies](#technologies)
-5. [What I Learned](#what-i-learned)
+5. [What We Learned](#what-we-learned)
 6. [Setup and Installation](#setup-and-installation)
 7. [Usage](#usage)
 8. [Code Examples](#code-examples)
-9. [How to Contribute](#how-to-contribute)
-10. [License](#license)
-11. [Contact](#contact)
-12. [Acknowledgments](#acknowledgments)
+9. [Contact](#contact)
+10. [Acknowledgments](#acknowledgments)
 
 </details>
 
@@ -39,14 +37,14 @@
 - Google Maps API
 - Docker
 
-## What I Learned
+## What We Learned
 - **Google Maps API**: How to use several Google Maps API functions (route optimization, place search, embedded map tool, distance/time estimation)
 - **Node.js**: How to create a full-stack web application using the Node.js framework
 - **MongoDB**: How to store data in a NoSQL database
 
 ## Setup and Installation
   
-1. Clone the repo: `git clone https://github.com/alexfishy12/audio_to_midi_transcriber.git`
+1. Clone the repo: `git clone https://github.com/alexfishy12/itineraryGenerator.git`
 2. Make sure Docker is installed on your host machine:
    - Windows:  https://docs.docker.com/desktop/install/windows-install/
    - macOS: https://docs.docker.com/desktop/install/mac-install/
@@ -68,13 +66,13 @@
 
 ## Usage
 1. Build and run the docker container: `docker compose up --build`
-2. Use a web browser and navigate to `http://localhost:[port]` to see the project
+2. Use a web browser and navigate to `http://localhost:[PORT]` to see the project
 
 ## Code Examples
 
-<details open>
-<summary>Adding a location to the itinerary</summary>
+- Adding a location to the itnerary:
 
+    ```javascript
     function addToItinerary(place) {
         const PLACE = place;
         console.log(PLACE);
@@ -91,10 +89,11 @@
         });
     }
 
-</details>
-<details>
-<summary>Saving an itinerary and pairing with a unique code:</summary>
+    ```
 
+- Saving an itinerary and pairing with a unique code:
+
+    ```typescript
     function saveItineraryToDatabase(unique_code)
     {
         var itineraryToSave = JSON.stringify({
@@ -129,8 +128,7 @@
             }
         })
     }
-
-</details>
+    ```
 
 ## Contact
 Alexander J. Fisher
